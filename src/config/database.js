@@ -7,7 +7,5 @@ require("dotenv").config();
 // const password = process.env.PASSWORD;
 const databaseUrl = process.env.DB_URL
 
-// console.log(host, database, user, password);
-
-const sequelize = new Sequelize(databaseUrl) 
-module.exports = sequelize;
+const connection = new Sequelize(databaseUrl) 
+module.exports = connection;
