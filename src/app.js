@@ -1,7 +1,10 @@
 const express = require("express");
-const app = express();
 require("dotenv").config();
-const db = require('./models')
+
+const app = express();
+const db = require("./models");
+
+const userRoutes = require("./routes/user");
 
 app.use(express.json());
 
@@ -15,8 +18,11 @@ app.listen(PORT, () => {
   try {
     await db.sequelize.authenticate();
     console.log("Conexão com o banco de dados estabilizada com sucesso");
-
   } catch (error) {
     console.error("Erro ao conectar ao banco de dados", error);
   }
 })();
+
+app.use("/user", userRoutes);
+
+module.exports = app;
