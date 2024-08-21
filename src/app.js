@@ -1,21 +1,33 @@
 const express = require("express");
+require("dotenv").config();
+
 const app = express();
-const sequelize = require('./config/database')
+const db = require("./models");
+const PORT = process.env.PORT;
+
+const authRoutes = require("./routes/authRoutes");
 
 app.use(express.json());
 
-const PORT = 8080;
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}...`);
 });
 
+app.use("/", authRoutes);
+
+
+
+
+
 (async () => {
   try {
-    await sequelize.authenticate();
-    console.log('Connection has been established successfully.');
+    await db.sequelize.authenticate();
+    console.log("Conexão com o banco de dados estabilizada com sucesso");
   } catch (error) {
-    console.error('Unable to connect to the database:', error);
+    console.error("Erro ao conectar ao banco de dados", error);
   }
 })();
 
+
+module.exports = app;
