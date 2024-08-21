@@ -6,7 +6,6 @@ const {
   userRegister,
   verifyDataFields,
 } = require("../services/authServices");
-const HandlerError = require("../errors/handlerError");
 
 const register = async (req, res) => {
   try {
@@ -18,7 +17,7 @@ const register = async (req, res) => {
     };
     verifyDataFields(data);
     const user = await userRegister(data);
-    sendSucessResponse(res, user);
+    sendSucessResponse(res, user.email, "Usuário cadastrado!");
   } catch (error) {
     sendMessageError(res, error);
   }
@@ -27,12 +26,9 @@ const register = async (req, res) => {
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-
     const user = await userAuthenticate(email, password);
-
     const token = await generateJWTToken(user);
-
-    sendSucessResponse(res, token);
+    sendSucessResponse(res, token, "Usuário logado!");
   } catch (error) {
     sendMessageError(res, error);
   }
