@@ -3,16 +3,22 @@ require("dotenv").config();
 
 const app = express();
 const db = require("./models");
+const PORT = process.env.PORT;
 
-const userRoutes = require("./routes/user");
+const authRoutes = require("./routes/authRoutes");
 
 app.use(express.json());
 
-const PORT = process.env.PORT;
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}...`);
 });
+
+app.use("/", authRoutes);
+
+
+
+
 
 (async () => {
   try {
@@ -23,6 +29,5 @@ app.listen(PORT, () => {
   }
 })();
 
-app.use("/user", userRoutes);
 
 module.exports = app;
