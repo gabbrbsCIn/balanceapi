@@ -28,7 +28,7 @@ const login = async (req, res) => {
     const { email, password } = req.body;
     const user = await userAuthenticate(email, password);
     const token = await generateJWTToken(user);
-    sendSucessResponse(res, token, "Usuário logado!");
+    sendSucessResponse(res, {id: user.id, email: user.email, acessToken: token}, "Usuário logado");
   } catch (error) {
     sendMessageError(res, error);
   }
