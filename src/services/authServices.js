@@ -4,10 +4,17 @@ const jwt = require("jsonwebtoken");
 const HandlerError = require("../errors/handlerError");
 require("dotenv").config();
 
-const verifyDataFields = (data) => {
-  if (!data.username || !data.password || !data.email) {
-    throw new HandlerError("Todos os campos são obrigatórios", 400);
+const verifyDataFields = (data, method) => {
+  if (method == "register") {
+    if (!data.username || !data.password || !data.email) {
+      throw new HandlerError("Todos os campos são obrigatórios", 400);
+    }
+  } else if (method == "login") {
+    if (!data.password || !data.email) {
+      throw new HandlerError("Todos os campos são obrigatórios", 400);
+    }
   }
+  return data;
 };
 
 const findUserByEmail = async (email) => {
@@ -81,6 +88,19 @@ const generateJWTToken = async (user) => {
   return token;
 };
 
+let blackListTokens = [];
+
+const addTokenToBlackList = (token) => {
+  blackListTokens.push(token);
+};
+const checkTokenInBlackList = (token) => {
+  return blackListTokens.includes(token);
+};
+
+const getTokenByReqHeader = (req) => {
+  return req.header("Authorization")?.replace("Bearer ", "");
+};
+
 module.exports = {
   userAuthenticate,
   generateJWTToken,
@@ -90,4 +110,7 @@ module.exports = {
   sendSucessResponse,
   userRegister,
   verifyDataFields,
+  addTokenToBlackList, 
+  checkTokenInBlackList,
+  getTokenByReqHeader,
 };

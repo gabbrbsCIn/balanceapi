@@ -5,6 +5,8 @@ const {
   generateJWTToken,
   userRegister,
   verifyDataFields,
+  addTokenToBlackList,
+  getTokenByReqHeader,
 } = require("../services/authServices");
 
 const register = async (req, res) => {
@@ -15,7 +17,7 @@ const register = async (req, res) => {
       password,
       email,
     };
-    verifyDataFields(data);
+    verifyDataFields(data, "register");
     const user = await userRegister(data);
     sendSucessResponse(res, user.email, "Usuário cadastrado!");
   } catch (error) {
@@ -26,15 +28,41 @@ const register = async (req, res) => {
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
+    const data = {
+      password,
+      email,
+    };
+    verifyDataFields(data, "login");
     const user = await userAuthenticate(email, password);
     const token = await generateJWTToken(user);
-    sendSucessResponse(res, {id: user.id, email: user.email, acessToken: token}, "Usuário logado");
+    sendSucessResponse(
+      res,
+      { id: user.id, email: user.email, acessToken: token },
+      "Usuário logado"
+    );
   } catch (error) {
     sendMessageError(res, error);
   }
 };
 
+const test = async (req, res) => {
+  return res.send(req.body.test).status(200);
+};
+
+const logout = async (req, res) => {
+  const token = getTokenByReqHeader(req)
+
+  if (token) {
+    addTokenToBlackList(token);
+    res.clearCookie("token");
+  }
+
+  return sendSucessResponse(res, "logout", "Usuário Deslogado!")
+};
+
 module.exports = {
   register,
   login,
+  logout,
+  test,
 };
