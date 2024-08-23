@@ -50,7 +50,7 @@ const login = async (req, res) => {
 };
 
 const test = async (req, res) => {
-  return res.send(req.body.test).status(200);
+  return res.send(req.user.name).status(200);
 };
 
 const logout = async (req, res) => {
