@@ -4,10 +4,12 @@ const {
   sendSucessResponse,
   generateJWTToken,
   userRegister,
-  verifyDataFields,
+  checkDataFields,
   addTokenToBlackList,
-  getTokenByReqHeader,
+  extractTokenFromHeader,
 } = require("../services/authServices");
+
+
 
 const register = async (req, res) => {
   try {
@@ -17,13 +19,15 @@ const register = async (req, res) => {
       password,
       email,
     };
-    verifyDataFields(data, "register");
+    checkDataFields(data, "register");
     const user = await userRegister(data);
     sendSucessResponse(res, user.email, "Usuário cadastrado!");
   } catch (error) {
     sendMessageError(res, error);
   }
 };
+
+
 
 const login = async (req, res) => {
   try {
@@ -32,7 +36,7 @@ const login = async (req, res) => {
       password,
       email,
     };
-    verifyDataFields(data, "login");
+    checkDataFields(data, "login");
     const user = await userAuthenticate(email, password);
     const token = await generateJWTToken(user);
     sendSucessResponse(
@@ -46,11 +50,11 @@ const login = async (req, res) => {
 };
 
 const test = async (req, res) => {
-  return res.send(req.body.test).status(200);
+  return res.send(req.user.name).status(200);
 };
 
 const logout = async (req, res) => {
-  const token = getTokenByReqHeader(req)
+  const token = extractTokenFromHeader(req.headers)
 
   if (token) {
     addTokenToBlackList(token);

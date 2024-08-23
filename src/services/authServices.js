@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const HandlerError = require("../errors/handlerError");
 require("dotenv").config();
 
-const verifyDataFields = (data, method) => {
+const checkDataFields = (data, method) => {
   if (method == "register") {
     if (!data.username || !data.password || !data.email) {
       throw new HandlerError("Todos os campos são obrigatórios", 400);
@@ -57,11 +57,11 @@ const sendMessageError = (res, error) => {
 };
 
 const verifyPassword = async (inputPassword, rightPassword) => {
-  const passwordIsValid = await bcrypt.compare(inputPassword, rightPassword);
-  if (!passwordIsValid) {
+  const isPasswordValid = await bcrypt.compare(inputPassword, rightPassword);
+  if (!isPasswordValid) {
     throw new HandlerError("Senha inválida", 401);
   }
-  return passwordIsValid;
+  return isPasswordValid;
 };
 
 const userAuthenticate = async (email, inputPassword) => {
@@ -70,7 +70,6 @@ const userAuthenticate = async (email, inputPassword) => {
     throw new HandlerError("E-mail inválido", 401);
   }
   await verifyPassword(inputPassword, user.password);
-  console.log;
   return user;
 };
 
@@ -78,6 +77,7 @@ const generateJWTToken = async (user) => {
   const token = jwt.sign(
     {
       id: user.id,
+      name: user.username,
     },
     process.env.JWT_SECRET_KEY,
     {
@@ -94,11 +94,38 @@ const addTokenToBlackList = (token) => {
   blackListTokens.push(token);
 };
 const checkTokenInBlackList = (token) => {
-  return blackListTokens.includes(token);
+  const isTokenInBlackList = blackListTokens.includes(token);
+  if (isTokenInBlackList) {
+    throw new HandlerError("Token não autorizado", 400);
+  }
+  return isTokenInBlackList;
 };
 
-const getTokenByReqHeader = (req) => {
-  return req.header("Authorization")?.replace("Bearer ", "");
+const extractTokenFromBearer = (token) => {
+  if (token.startsWith("Bearer ")) {
+    token = token.slice(7, token.length);
+  }
+  return token;
+};
+
+const extractTokenFromHeader = (req) => {
+  let token = req["authorization"];
+  if (!token) {
+    throw new HandlerError("Nenhum token foi inserido", 403);
+  }
+  token = extractTokenFromBearer(token);
+  return token;
+};
+
+const verifyJWTToken = (token) => {
+  const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
+  const decodedToken = jwt.verify(token, JWT_SECRET_KEY, (error, decoded) => {
+    if (error) {
+      throw new HandlerError(error.message, 400);
+    }
+    return decoded;
+  });
+  return decodedToken;
 };
 
 module.exports = {
@@ -109,8 +136,9 @@ module.exports = {
   sendMessageError,
   sendSucessResponse,
   userRegister,
-  verifyDataFields,
-  addTokenToBlackList, 
+  checkDataFields,
+  addTokenToBlackList,
   checkTokenInBlackList,
-  getTokenByReqHeader,
+  extractTokenFromHeader,
+  verifyJWTToken,
 };
