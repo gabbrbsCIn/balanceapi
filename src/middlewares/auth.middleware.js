@@ -6,11 +6,13 @@ const {
   checkTokenInBlackList,
 } = require("../services/authServices");
 
-const authenticateToken = (req, res, next) => {
+const authenticateToken = async (req, res, next) => {
   try {
     const token = extractTokenFromHeader(req.headers);
     checkTokenInBlackList(token);
-    verifyJWTToken(req, token, next);
+    const decodedToken = verifyJWTToken(token);
+    req.user = decodedToken;
+    next();
   } catch (error) {
     sendMessageError(res, error);
   }
