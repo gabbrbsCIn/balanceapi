@@ -101,8 +101,6 @@ const checkTokenInBlackList = (token) => {
   return isTokenInBlackList;
 };
 
-
-
 const extractTokenFromBearer = (token) => {
   if (token.startsWith("Bearer ")) {
     token = token.slice(7, token.length);
@@ -119,15 +117,15 @@ const extractTokenFromHeader = (req) => {
   return token;
 };
 
-const verifyJWTToken = (req, token, next) => {
+const verifyJWTToken = (token) => {
   const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
-  jwt.verify(token, JWT_SECRET_KEY, (error, decoded) => {
+  const decodedToken = jwt.verify(token, JWT_SECRET_KEY, (error, decoded) => {
     if (error) {
       throw new HandlerError(error.message, 400);
     }
-    req.user = decoded;
-    next();
+    return decoded;
   });
+  return decodedToken;
 };
 
 module.exports = {
