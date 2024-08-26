@@ -41,7 +41,7 @@ const login = async (req, res) => {
     const token = await generateJWTToken(user);
     sendSucessResponse(
       res,
-      { id: user.id, email: user.email, acessToken: token },
+      { id: user.id, email: user.email, accessToken: token },
       "Usuário logado"
     );
   } catch (error) {
