@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const { User } = require("../models");
+const { Resident } = require("../models");
 const jwt = require("jsonwebtoken");
 const HandlerError = require("../errors/handlerError");
 require("dotenv").config();
@@ -18,7 +18,7 @@ const checkDataFields = (data, method) => {
 };
 
 const findUserByEmail = async (email) => {
-  const user = await User.findOne({
+  const user = await Resident.findOne({
     where: {
       email,
     },
@@ -43,7 +43,7 @@ const userRegister = async (data) => {
     password: hashedPassword,
     email: data.email,
   };
-  await User.create(userDataRegister);
+  await Resident.create(userDataRegister);
   return userDataRegister;
 };
 
