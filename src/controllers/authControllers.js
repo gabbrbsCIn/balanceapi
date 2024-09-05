@@ -9,8 +9,6 @@ const {
   extractTokenFromHeader,
 } = require("../services/authServices");
 
-
-
 const register = async (req, res) => {
   try {
     const { username, password, email } = req.body;
@@ -26,8 +24,6 @@ const register = async (req, res) => {
     sendMessageError(res, error);
   }
 };
-
-
 
 const login = async (req, res) => {
   try {
@@ -54,14 +50,14 @@ const test = async (req, res) => {
 };
 
 const logout = async (req, res) => {
-  const token = extractTokenFromHeader(req.headers)
+  const token = extractTokenFromHeader(req.headers);
 
   if (token) {
     addTokenToBlackList(token);
     res.clearCookie("token");
   }
 
-  return sendSucessResponse(res, "logout", "Usuário Deslogado!")
+  return sendSucessResponse(res, "logout", "Usuário Deslogado!");
 };
 
 module.exports = {
