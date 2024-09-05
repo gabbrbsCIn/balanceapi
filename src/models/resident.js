@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       apartmentId: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
         references: {
           model: "Apartments",
           key: "id",
