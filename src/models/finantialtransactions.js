@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
   FinantialTransactions.init(
     {
       id: {
+        allowNull: false,
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
