@@ -17,7 +17,6 @@ const register = async (req, res) => {
       password,
       email,
     };
-    console.log(data);
     checkDataFields(data, "register");
     const user = await userRegister(data);
     sendSucessResponse(res, user.email, "Usuário cadastrado!");
