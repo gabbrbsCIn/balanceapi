@@ -4,7 +4,7 @@ const {
   sendSucessResponse,
   generateJWTToken,
   userRegister,
-  checkDataFields,
+  checkAuthDataFields,
   addTokenToBlackList,
   extractTokenFromHeader,
 } = require("../services/authServices");
@@ -17,7 +17,7 @@ const register = async (req, res) => {
       password,
       email,
     };
-    checkDataFields(data, "register");
+    checkAuthDataFields(data, "register");
     const user = await userRegister(data);
     sendSucessResponse(res, user.email, "Usuário cadastrado!");
   } catch (error) {
@@ -32,7 +32,7 @@ const login = async (req, res) => {
       password,
       email,
     };
-    checkDataFields(data, "login");
+    checkAuthDataFields(data, "login");
     const user = await userAuthenticate(email, password);
     const token = await generateJWTToken(user);
     sendSucessResponse(

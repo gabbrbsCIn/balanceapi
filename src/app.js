@@ -6,17 +6,16 @@ const db = require("./models");
 const PORT = process.env.PORT;
 
 const authRoutes = require("./routes/authRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 
 app.use(express.json());
-
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}...`);
 });
 
 app.use("/", authRoutes);
-
-
+app.use("/admin", adminRoutes);
 
 
 
@@ -28,6 +27,5 @@ app.use("/", authRoutes);
     console.error("Erro ao conectar ao banco de dados", error);
   }
 })();
-
 
 module.exports = app;

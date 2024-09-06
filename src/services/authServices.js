@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const HandlerError = require("../errors/handlerError");
 require("dotenv").config();
 
-const checkDataFields = (data, method) => {
+const checkAuthDataFields = (data, method) => {
   if (method == "register") {
     if (!data.username || !data.password || !data.email) {
       throw new HandlerError("Todos os campos são obrigatórios", 400);
@@ -136,7 +136,7 @@ module.exports = {
   sendMessageError,
   sendSucessResponse,
   userRegister,
-  checkDataFields,
+  checkAuthDataFields,
   addTokenToBlackList,
   checkTokenInBlackList,
   extractTokenFromHeader,

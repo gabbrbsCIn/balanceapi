@@ -23,10 +23,19 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING, 
         allowNull: false
       },
+      residentAdminId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: "Residents",
+          key: "id",
+        },
+      }
     },
     {
       sequelize,
       modelName: "Condominium",
+      tableName: "Condominiums",
     }
   );
   return Condominium;
