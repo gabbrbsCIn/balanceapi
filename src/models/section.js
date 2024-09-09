@@ -7,8 +7,7 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
-    }
+    static associate(models) {}
   }
   Section.init(
     {
@@ -25,9 +24,9 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'Condominiums',
-          key:'id'
-        }
+          model: "Condominiums",
+          key: "id",
+        },
       },
       createdAt: {
         allowNull: false,
@@ -41,6 +40,12 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "Section",
+      indexes: [
+        {
+          unique: true,
+          fields: ["name", "condominiumId"],
+        },
+      ],
     }
   );
   return Section;
