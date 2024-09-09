@@ -1,5 +1,5 @@
 const HandlerError = require("../errors/handlerError");
-const { Condominium, Section } = require("../models");
+const { Condominium, Section, Apartment } = require("../models");
 
 const checkDataFields = (name) => {
   if (!name) {
@@ -8,23 +8,12 @@ const checkDataFields = (name) => {
   return name;
 };
 
-const createCondominium = async (name, residentAdminId) => {
-  const condominium = await Condominium.create({
-    name: name,
-    residentAdminId: residentAdminId,
-  });
-  return condominium;
+const checkApartmentDataFields = (sectionId, name) => {
+  if (!sectionId || !name) {
+    throw new HandlerError("Os campos são obrigatórios");
+  }
+  return name;
 };
-
-const createSection = async (name, condominiumId) => {
-  console.log(name, condominiumId)
-  const section = await Section.create({
-    name: name,
-    condominiumId: condominiumId,
-  });
-  return section;
-};
-
 const checkResidentAdmin = async (condominiumId, residentId) => {
   const condominium = await Condominium.findOne({
     where: {
@@ -43,9 +32,36 @@ const checkResidentAdmin = async (condominiumId, residentId) => {
   return condominium;
 };
 
+const createCondominium = async (name, residentAdminId) => {
+  const condominium = await Condominium.create({
+    name: name,
+    residentAdminId: residentAdminId,
+  });
+  return condominium;
+};
+
+const createSection = async (name, condominiumId) => {
+  const section = await Section.create({
+    name: name,
+    condominiumId: condominiumId,
+  });
+  return section;
+};
+
+const createApartment = async (name, sectionId) => {
+  console.log(name, sectionId)
+  const apartment = await Apartment.create({
+    name: name,
+    sectionId: sectionId,
+  });
+  return apartment;
+};
+
 module.exports = {
   checkDataFields,
   createCondominium,
   checkResidentAdmin,
   createSection,
+  checkApartmentDataFields,
+  createApartment,
 };
