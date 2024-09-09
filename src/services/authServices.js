@@ -47,7 +47,7 @@ const userRegister = async (data) => {
   return userDataRegister;
 };
 
-const sendSucessResponse = (res, data, message) => {
+const sendSuccessResponse = (res, data, message) => {
   return res.status(200).json({ message: message, data: data });
 };
 
@@ -134,7 +134,7 @@ module.exports = {
   findUserByEmail,
   verifyPassword,
   sendMessageError,
-  sendSucessResponse,
+  sendSuccessResponse,
   userRegister,
   checkAuthDataFields,
   addTokenToBlackList,
