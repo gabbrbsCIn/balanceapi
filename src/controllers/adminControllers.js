@@ -7,7 +7,6 @@ const condominium = async (req, res) => {
     const { name } = req.body;
     checkDataFields(name);
     const residentAdminId = req.user.id;
-    console.log(residentAdminId)
     const condominium = await createCondominium(name, residentAdminId);
     sendSucessResponse(res, condominium, "Condomínio criado com sucesso");
   } catch (error) {
@@ -19,6 +18,11 @@ const condominium = async (req, res) => {
   }
 };
 
+const section = async (req, res) => {
+  return res.send(req.body).status(200);
+};
+
 module.exports = {
   condominium,
+  section
 };
