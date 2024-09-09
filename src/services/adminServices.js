@@ -1,5 +1,5 @@
 const HandlerError = require("../errors/handlerError");
-const { Condominium } = require("../models");
+const { Condominium, Section } = require("../models");
 
 const checkDataFields = (name) => {
   if (!name) {
@@ -16,13 +16,22 @@ const createCondominium = async (name, residentAdminId) => {
   return condominium;
 };
 
+const createSection = async (name, condominiumId) => {
+  console.log(name, condominiumId)
+  const section = await Section.create({
+    name: name,
+    condominiumId: condominiumId,
+  });
+  return section;
+};
+
 const checkResidentAdmin = async (condominiumId, residentId) => {
   const condominium = await Condominium.findOne({
     where: {
       id: condominiumId,
       residentAdminId: residentId,
     },
-    attributes: [ 'id', 'name', 'residentAdminId']
+    attributes: ["id", "name", "residentAdminId"],
   });
 
   if (!condominium) {
@@ -31,11 +40,12 @@ const checkResidentAdmin = async (condominiumId, residentId) => {
       403
     );
   }
-  return condominium
+  return condominium;
 };
 
 module.exports = {
   checkDataFields,
   createCondominium,
   checkResidentAdmin,
+  createSection,
 };
