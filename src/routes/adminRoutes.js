@@ -8,5 +8,6 @@ const { admin } = require("../middlewares/admin.middleware");
 
 router.post("/condominium", authenticateToken, adminControllers.condominium);
 router.post("/section", authenticateToken, admin, adminControllers.section);
+router.post("/apartment", authenticateToken, admin, adminControllers.apartment);
 
 module.exports = router;
