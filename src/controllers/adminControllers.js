@@ -1,8 +1,10 @@
 const HandlerError = require("../errors/handlerError");
 const {
   checkDataFields,
+  checkApartmentDataFields,
   createCondominium,
   createSection,
+  createApartment
 } = require("../services/adminServices");
 const {
   sendSuccessResponse,
@@ -28,7 +30,7 @@ const condominium = async (req, res) => {
 const section = async (req, res) => {
   try {
     const { condominiumId, sectionName } = req.body;
-    console.log(checkDataFields(sectionName));
+    checkDataFields(sectionName);
     const section = await createSection(sectionName, condominiumId);
     sendSuccessResponse(res, section, "Bloco criado com sucesso");
   } catch (error) {
@@ -40,7 +42,23 @@ const section = async (req, res) => {
   }
 };
 
+const apartment = async (req, res) => {
+  try {
+    const { sectionId, name } = req.body;
+    checkApartmentDataFields(sectionId, name)
+    const apartment = await createApartment(name, sectionId);
+    sendSuccessResponse(res, apartment, "Apartamento criado com sucesso");
+  } catch (error) {
+    if (error instanceof HandlerError) {
+      sendMessageError(res, error);
+    } else {
+      res.send(error).status(500);
+    };
+  }
+};
+
 module.exports = {
   condominium,
   section,
+  apartment,
 };
