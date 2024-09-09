@@ -9,11 +9,33 @@ const checkDataFields = (name) => {
 };
 
 const createCondominium = async (name, residentAdminId) => {
-  const condominium = await Condominium.create({ name: name, residentAdminId: residentAdminId });
+  const condominium = await Condominium.create({
+    name: name,
+    residentAdminId: residentAdminId,
+  });
   return condominium;
+};
+
+const checkResidentAdmin = async (condominiumId, residentId) => {
+  const condominium = await Condominium.findOne({
+    where: {
+      id: condominiumId,
+      residentAdminId: residentId,
+    },
+    attributes: [ 'id', 'name', 'residentAdminId']
+  });
+
+  if (!condominium) {
+    throw new HandlerError(
+      "Você não tem permissão para realizar essa operação nesse condomínio",
+      403
+    );
+  }
+  return condominium
 };
 
 module.exports = {
   checkDataFields,
   createCondominium,
+  checkResidentAdmin,
 };
