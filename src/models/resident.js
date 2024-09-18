@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
         unique: true,
       },
       apartmentId: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: true,
         references: {
           model: "Apartments",

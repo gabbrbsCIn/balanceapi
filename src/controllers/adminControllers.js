@@ -1,6 +1,18 @@
 const HandlerError = require("../errors/handlerError");
-const { checkDataFields, createCondominium} = require("../services/adminServices");
-const { sendSucessResponse, sendMessageError } = require("../services/authServices");
+const {
+  checkDataFields,
+  checkApartmentDataFields,
+  createCondominium,
+  createSection,
+  createApartment,
+  findApartmentById,
+  findResidentById,
+  addResidentToApartment,
+} = require("../services/adminServices");
+const {
+  sendSuccessResponse,
+  sendMessageError,
+} = require("../services/authServices");
 
 const condominium = async (req, res) => {
   try {
@@ -8,21 +20,63 @@ const condominium = async (req, res) => {
     checkDataFields(name);
     const residentAdminId = req.user.id;
     const condominium = await createCondominium(name, residentAdminId);
-    sendSucessResponse(res, condominium, "Condomínio criado com sucesso");
+    sendSuccessResponse(res, condominium, "Condomínio criado com sucesso");
   } catch (error) {
-    if (error instanceof HandlerError){
-        sendMessageError(res, error);
+    if (error instanceof HandlerError) {
+      sendMessageError(res, error);
     } else {
-        res.send(error).status(500);
+      res.send(error).status(500);
     }
   }
 };
 
 const section = async (req, res) => {
-  return res.send(req.body).status(200);
+  try {
+    const { condominiumId, sectionName } = req.body;
+    checkDataFields(sectionName);
+    const section = await createSection(sectionName, condominiumId);
+    sendSuccessResponse(res, section, "Bloco criado com sucesso");
+  } catch (error) {
+    if (error instanceof HandlerError) {
+      sendMessageError(res, error);
+    } else {
+      res.send(error).status(500);
+    }
+  }
+};
+
+const apartment = async (req, res) => {
+  try {
+    const { sectionId, name } = req.body;
+    checkApartmentDataFields(sectionId, name);
+    const apartment = await createApartment(name, sectionId);
+    sendSuccessResponse(res, apartment, "Apartamento criado com sucesso");
+  } catch (error) {
+    if (error instanceof HandlerError) {
+      sendMessageError(res, error);
+    } else {
+      res.send(error).status(500);
+    }
+  }
+};
+
+const residentInAparment = async (req, res) => {
+  try {
+    const { residentId, apartmentId } = req.body;
+    checkApartmentDataFields(residentId, apartmentId);
+    await findResidentById(residentId);
+    await findApartmentById(apartmentId);
+    await addResidentToApartment(residentId, apartmentId);
+
+    sendSuccessResponse(res, apartmentId, "Adicionado morador ao apartamento");
+  } catch (error) {
+    sendMessageError(res, error);
+  }
 };
 
 module.exports = {
   condominium,
-  section
+  section,
+  apartment,
+  residentInAparment,
 };
