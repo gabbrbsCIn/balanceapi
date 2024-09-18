@@ -52,7 +52,7 @@ const sendSuccessResponse = (res, data, message) => {
 };
 
 const sendMessageError = (res, error) => {
-  console.log(error.statusCode);
+  console.log(error);
   return res.status(error.statusCode).json({ message: error.message });
 };
 
