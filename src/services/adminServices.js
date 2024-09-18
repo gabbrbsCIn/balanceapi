@@ -1,5 +1,5 @@
 const HandlerError = require("../errors/handlerError");
-const { Condominium, Section, Apartment } = require("../models");
+const { Condominium, Section, Apartment, Resident } = require("../models");
 
 const checkDataFields = (name) => {
   if (!name) {
@@ -49,11 +49,48 @@ const createSection = async (name, condominiumId) => {
 };
 
 const createApartment = async (name, sectionId) => {
-  console.log(name, sectionId)
   const apartment = await Apartment.create({
     name: name,
     sectionId: sectionId,
   });
+  return apartment;
+};
+
+const findResidentById = async (residentId) => {
+  const resident = await Resident.findOne({
+    where: {
+      id: residentId,
+    },
+  });
+
+  if (!resident) {
+    throw new HandlerError("Morador não encontrado", 404);
+  }
+};
+
+const findApartmentById = async (apartmentId) => {
+  const apartment = await Apartment.findOne({
+    where: {
+      id: apartmentId,
+    },
+  });
+  if (!apartment) {
+    throw new HandlerError("Apartamento não encontrado", 404);
+  }
+};
+
+const addResidentToApartment = async (residentId, apartmentId) => {
+  const apartment = await Resident.update(
+    {
+      apartmentId: apartmentId,
+    },
+    {
+      where: {
+        id: residentId,
+      },
+    }
+  );
+
   return apartment;
 };
 
@@ -64,4 +101,7 @@ module.exports = {
   createSection,
   checkApartmentDataFields,
   createApartment,
+  findResidentById,
+  findApartmentById,
+  addResidentToApartment,
 };
