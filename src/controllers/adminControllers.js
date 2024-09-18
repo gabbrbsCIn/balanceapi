@@ -4,7 +4,10 @@ const {
   checkApartmentDataFields,
   createCondominium,
   createSection,
-  createApartment
+  createApartment,
+  findApartmentById,
+  findResidentById,
+  addResidentToApartment,
 } = require("../services/adminServices");
 const {
   sendSuccessResponse,
@@ -45,7 +48,7 @@ const section = async (req, res) => {
 const apartment = async (req, res) => {
   try {
     const { sectionId, name } = req.body;
-    checkApartmentDataFields(sectionId, name)
+    checkApartmentDataFields(sectionId, name);
     const apartment = await createApartment(name, sectionId);
     sendSuccessResponse(res, apartment, "Apartamento criado com sucesso");
   } catch (error) {
@@ -53,7 +56,21 @@ const apartment = async (req, res) => {
       sendMessageError(res, error);
     } else {
       res.send(error).status(500);
-    };
+    }
+  }
+};
+
+const residentInAparment = async (req, res) => {
+  try {
+    const { residentId, apartmentId } = req.body;
+    checkApartmentDataFields(residentId, apartmentId);
+    await findResidentById(residentId);
+    await findApartmentById(apartmentId);
+    await addResidentToApartment(residentId, apartmentId);
+
+    sendSuccessResponse(res, apartmentId, "Adicionado morador ao apartamento");
+  } catch (error) {
+    sendMessageError(res, error);
   }
 };
 
@@ -61,4 +78,5 @@ module.exports = {
   condominium,
   section,
   apartment,
+  residentInAparment,
 };
