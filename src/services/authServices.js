@@ -1,17 +1,24 @@
 const bcrypt = require("bcrypt");
-const { User } = require("../models");
+const { Resident } = require("../models");
 const jwt = require("jsonwebtoken");
 const HandlerError = require("../errors/handlerError");
 require("dotenv").config();
 
-const verifyDataFields = (data) => {
-  if (!data.username || !data.password || !data.email) {
-    throw new HandlerError("Todos os campos são obrigatórios", 400);
+const checkAuthDataFields = (data, method) => {
+  if (method == "register") {
+    if (!data.username || !data.password || !data.email) {
+      throw new HandlerError("Todos os campos são obrigatórios", 400);
+    }
+  } else if (method == "login") {
+    if (!data.password || !data.email) {
+      throw new HandlerError("Todos os campos são obrigatórios", 400);
+    }
   }
+  return data;
 };
 
 const findUserByEmail = async (email) => {
-  const user = await User.findOne({
+  const user = await Resident.findOne({
     where: {
       email,
     },
@@ -36,25 +43,25 @@ const userRegister = async (data) => {
     password: hashedPassword,
     email: data.email,
   };
-  await User.create(userDataRegister);
+  await Resident.create(userDataRegister);
   return userDataRegister;
 };
 
-const sendSucessResponse = (res, data, message) => {
+const sendSuccessResponse = (res, data, message) => {
   return res.status(200).json({ message: message, data: data });
 };
 
 const sendMessageError = (res, error) => {
-  console.log(error.statusCode);
+  console.log(error);
   return res.status(error.statusCode).json({ message: error.message });
 };
 
 const verifyPassword = async (inputPassword, rightPassword) => {
-  const passwordIsValid = await bcrypt.compare(inputPassword, rightPassword);
-  if (!passwordIsValid) {
+  const isPasswordValid = await bcrypt.compare(inputPassword, rightPassword);
+  if (!isPasswordValid) {
     throw new HandlerError("Senha inválida", 401);
   }
-  return passwordIsValid;
+  return isPasswordValid;
 };
 
 const userAuthenticate = async (email, inputPassword) => {
@@ -63,7 +70,6 @@ const userAuthenticate = async (email, inputPassword) => {
     throw new HandlerError("E-mail inválido", 401);
   }
   await verifyPassword(inputPassword, user.password);
-  console.log;
   return user;
 };
 
@@ -71,6 +77,7 @@ const generateJWTToken = async (user) => {
   const token = jwt.sign(
     {
       id: user.id,
+      name: user.username,
     },
     process.env.JWT_SECRET_KEY,
     {
@@ -81,13 +88,57 @@ const generateJWTToken = async (user) => {
   return token;
 };
 
+let blackListTokens = [];
+
+const addTokenToBlackList = (token) => {
+  blackListTokens.push(token);
+};
+const checkTokenInBlackList = (token) => {
+  const isTokenInBlackList = blackListTokens.includes(token);
+  if (isTokenInBlackList) {
+    throw new HandlerError("Token não autorizado", 400);
+  }
+  return isTokenInBlackList;
+};
+
+const extractTokenFromBearer = (token) => {
+  if (token.startsWith("Bearer ")) {
+    token = token.slice(7, token.length);
+  }
+  return token;
+};
+
+const extractTokenFromHeader = (req) => {
+  let token = req["authorization"];
+  if (!token) {
+    throw new HandlerError("Nenhum token foi inserido", 403);
+  }
+  token = extractTokenFromBearer(token);
+  return token;
+};
+
+const verifyJWTToken = (token) => {
+  const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
+  const decodedToken = jwt.verify(token, JWT_SECRET_KEY, (error, decoded) => {
+    if (error) {
+      throw new HandlerError(error.message, 400);
+    }
+    return decoded;
+  });
+  return decodedToken;
+};
+
 module.exports = {
   userAuthenticate,
   generateJWTToken,
   findUserByEmail,
   verifyPassword,
   sendMessageError,
-  sendSucessResponse,
+  sendSuccessResponse,
   userRegister,
-  verifyDataFields,
+  checkAuthDataFields,
+  addTokenToBlackList,
+  checkTokenInBlackList,
+  extractTokenFromHeader,
+  verifyJWTToken,
 };
