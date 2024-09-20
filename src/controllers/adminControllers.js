@@ -8,8 +8,10 @@ const {
   findApartmentById,
   findResidentById,
   addResidentToApartment,
-  checkFinantialDataFields,
+  checkTransactionDataFields,
   createTransaction,
+  updateTransaction,
+  updateSection,
 } = require("../services/adminServices");
 const {
   sendSucessResponse,
@@ -87,13 +89,45 @@ const transaction = async (req, res) => {
       transactionData,
       paid,
     };
-    checkFinantialDataFields(transaction);
-    await createTransaction(transaction);
+    checkTransactionDataFields(transaction);
+    const newTransaction = await createTransaction(transaction);
     sendSucessResponse(
       res,
-      transaction,
+      newTransaction,
       "Transação adicionada ao balanço do condomínio"
     );
+  } catch (error) {
+    sendMessageError(res, error);
+  }
+};
+
+const changeTransaction = async (req, res) => {
+  try {
+    const { name, type, value, residentId, transactionData, paid } = req.body;
+    const transaction = {
+      name,
+      type,
+      value,
+      residentId,
+      transactionData,
+      paid,
+    };
+    checkTransactionDataFields(transaction);
+    const transactionId = req.params.id;
+    await updateTransaction(transaction, transactionId);
+    sendSucessResponse(res, {transactionId, transaction}, "Transação atualizada");
+  } catch (error) {
+    sendMessageError(res, error);
+  }
+};
+
+const changeSection = async (req, res) => {
+  try {
+    const { sectionName } = req.body;
+    checkDataFields(sectionName);
+    const sectionId = req.params.id;
+    await updateSection(sectionName, sectionId);
+    sendSucessResponse(res, {sectionId, sectionName}, "Bloco atualizado");
   } catch (error) {
     sendMessageError(res, error);
   }
@@ -105,4 +139,6 @@ module.exports = {
   apartment,
   residentInAparment,
   transaction,
+  changeTransaction,
+  changeSection,
 };
