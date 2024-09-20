@@ -133,6 +133,24 @@ const updateTransaction = async (transactionData, transactionId) => {
   return transaction;
 };
 
+const updateSection = async (sectionName, sectionId) => {
+  const section = await Section.update(
+    {
+      name: sectionName,
+    },
+    {
+      where: {
+        id: sectionId,
+      },
+    }
+  );
+  if (section[0] == 0) {
+    throw new HandlerError("ID do bloco inválida", 400);
+  }
+
+  return section;
+};
+
 module.exports = {
   checkDataFields,
   createCondominium,
@@ -146,4 +164,5 @@ module.exports = {
   checkTransactionDataFields,
   createTransaction,
   updateTransaction,
+  updateSection,
 };
