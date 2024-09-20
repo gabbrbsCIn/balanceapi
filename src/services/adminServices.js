@@ -1,5 +1,5 @@
 const HandlerError = require("../errors/handlerError");
-const { Condominium, Section, Apartment, Resident } = require("../models");
+const { Condominium, Section, Apartment, Resident, FinantialTransactions } = require("../models");
 
 const checkDataFields = (name) => {
   if (!name) {
@@ -94,6 +94,26 @@ const addResidentToApartment = async (residentId, apartmentId) => {
   return apartment;
 };
 
+const checkFinantialDataFields = async (transactionData) => {
+  if (
+    !transactionData.name ||
+    !transactionData.type ||
+    !transactionData.value ||
+    !transactionData.residentId ||
+    !transactionData.transactionData ||
+    !transactionData.paid
+  ) {
+    throw new HandlerError("Há campos não preenchidos", 400);
+  }
+  return transactionData;
+};
+
+const createTransaction = async (transactionData) => {
+  const transaction = await FinantialTransactions.create(transactionData);
+
+  return transaction;
+};
+
 module.exports = {
   checkDataFields,
   createCondominium,
@@ -104,4 +124,6 @@ module.exports = {
   findResidentById,
   findApartmentById,
   addResidentToApartment,
+  checkFinantialDataFields,
+  createTransaction,
 };

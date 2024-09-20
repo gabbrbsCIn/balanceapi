@@ -8,9 +8,11 @@ const {
   findApartmentById,
   findResidentById,
   addResidentToApartment,
+  checkFinantialDataFields,
+  createTransaction,
 } = require("../services/adminServices");
 const {
-  sendSuccessResponse,
+  sendSucessResponse,
   sendMessageError,
 } = require("../services/authServices");
 
@@ -20,7 +22,7 @@ const condominium = async (req, res) => {
     checkDataFields(name);
     const residentAdminId = req.user.id;
     const condominium = await createCondominium(name, residentAdminId);
-    sendSuccessResponse(res, condominium, "Condomínio criado com sucesso");
+    sendSucessResponse(res, condominium, "Condomínio criado com sucesso");
   } catch (error) {
     if (error instanceof HandlerError) {
       sendMessageError(res, error);
@@ -35,7 +37,7 @@ const section = async (req, res) => {
     const { condominiumId, sectionName } = req.body;
     checkDataFields(sectionName);
     const section = await createSection(sectionName, condominiumId);
-    sendSuccessResponse(res, section, "Bloco criado com sucesso");
+    sendSucessResponse(res, section, "Bloco criado com sucesso");
   } catch (error) {
     if (error instanceof HandlerError) {
       sendMessageError(res, error);
@@ -50,7 +52,7 @@ const apartment = async (req, res) => {
     const { sectionId, name } = req.body;
     checkApartmentDataFields(sectionId, name);
     const apartment = await createApartment(name, sectionId);
-    sendSuccessResponse(res, apartment, "Apartamento criado com sucesso");
+    sendSucessResponse(res, apartment, "Apartamento criado com sucesso");
   } catch (error) {
     if (error instanceof HandlerError) {
       sendMessageError(res, error);
@@ -68,7 +70,30 @@ const residentInAparment = async (req, res) => {
     await findApartmentById(apartmentId);
     await addResidentToApartment(residentId, apartmentId);
 
-    sendSuccessResponse(res, apartmentId, "Adicionado morador ao apartamento");
+    sendSucessResponse(res, apartmentId, "Adicionado morador ao apartamento");
+  } catch (error) {
+    sendMessageError(res, error);
+  }
+};
+
+const transaction = async (req, res) => {
+  try {
+    const { name, type, value, residentId, transactionData, paid } = req.body;
+    const transaction = {
+      name,
+      type,
+      value,
+      residentId,
+      transactionData,
+      paid,
+    };
+    checkFinantialDataFields(transaction);
+    await createTransaction(transaction);
+    sendSucessResponse(
+      res,
+      transaction,
+      "Transação adicionada ao balanço do condomínio"
+    );
   } catch (error) {
     sendMessageError(res, error);
   }
@@ -79,4 +104,5 @@ module.exports = {
   section,
   apartment,
   residentInAparment,
+  transaction,
 };

@@ -38,8 +38,12 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       transactionData: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.DATE,
         allowNull: false,
+      },
+      paid: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
       },
     },
     {
