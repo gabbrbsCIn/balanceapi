@@ -1,5 +1,11 @@
 const HandlerError = require("../errors/handlerError");
-const { Condominium, Section, Apartment, Resident, FinantialTransactions } = require("../models");
+const {
+  Condominium,
+  Section,
+  Apartment,
+  Resident,
+  FinantialTransactions,
+} = require("../models");
 
 const checkDataFields = (name) => {
   if (!name) {
@@ -94,7 +100,7 @@ const addResidentToApartment = async (residentId, apartmentId) => {
   return apartment;
 };
 
-const checkFinantialDataFields = async (transactionData) => {
+const checkTransactionDataFields = async (transactionData) => {
   if (
     !transactionData.name ||
     !transactionData.type ||
@@ -114,6 +120,19 @@ const createTransaction = async (transactionData) => {
   return transaction;
 };
 
+const updateTransaction = async (transactionData, transactionId) => {
+  const transaction = await FinantialTransactions.update(transactionData, {
+    where: {
+      id: transactionId,
+    },
+  });
+
+  if (transaction[0] == 0) {
+    throw new HandlerError("ID da transação inválida", 400);
+  }
+  return transaction;
+};
+
 module.exports = {
   checkDataFields,
   createCondominium,
@@ -124,6 +143,7 @@ module.exports = {
   findResidentById,
   findApartmentById,
   addResidentToApartment,
-  checkFinantialDataFields,
+  checkTransactionDataFields,
   createTransaction,
+  updateTransaction,
 };
