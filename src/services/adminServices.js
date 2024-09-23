@@ -150,6 +150,23 @@ const updateSection = async (sectionName, sectionId) => {
 
   return section;
 };
+const updateCondominium = async (condominiumName, condominiumId) => {
+  const condominium = await Condominium.update(
+    {
+      name: condominiumName,
+    },
+    {
+      where: {
+        id: condominiumId,
+      },
+    }
+  );
+  if (condominium[0] == 0) {
+    throw new HandlerError("ID do condomínio inválido", 400);
+  }
+
+  return condominium;
+};
 
 module.exports = {
   checkDataFields,
@@ -165,4 +182,5 @@ module.exports = {
   createTransaction,
   updateTransaction,
   updateSection,
+  updateCondominium,
 };
