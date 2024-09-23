@@ -12,6 +12,7 @@ const {
   createTransaction,
   updateTransaction,
   updateSection,
+  updateCondominium,
 } = require("../services/adminServices");
 const {
   sendSucessResponse,
@@ -115,7 +116,11 @@ const changeTransaction = async (req, res) => {
     checkTransactionDataFields(transaction);
     const transactionId = req.params.id;
     await updateTransaction(transaction, transactionId);
-    sendSucessResponse(res, {transactionId, transaction}, "Transação atualizada");
+    sendSucessResponse(
+      res,
+      { transactionId, transaction },
+      "Transação atualizada"
+    );
   } catch (error) {
     sendMessageError(res, error);
   }
@@ -127,7 +132,23 @@ const changeSection = async (req, res) => {
     checkDataFields(sectionName);
     const sectionId = req.params.id;
     await updateSection(sectionName, sectionId);
-    sendSucessResponse(res, {sectionId, sectionName}, "Bloco atualizado");
+    sendSucessResponse(res, { sectionId, sectionName }, "Bloco atualizado");
+  } catch (error) {
+    sendMessageError(res, error);
+  }
+};
+
+const changeCondominium = async (req, res) => {
+  try {
+    const { condominiumName } = req.body;
+    checkDataFields(condominiumName);
+    const condominiumId = req.params.id;
+    await updateCondominium(condominiumName, condominiumId);
+    sendSucessResponse(
+      res,
+      { condominiumId, condominiumName },
+      "Bloco atualizado"
+    );
   } catch (error) {
     sendMessageError(res, error);
   }
@@ -141,4 +162,5 @@ module.exports = {
   transaction,
   changeTransaction,
   changeSection,
+  changeCondominium,
 };
