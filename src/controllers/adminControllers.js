@@ -13,6 +13,7 @@ const {
   updateTransaction,
   updateSection,
   updateCondominium,
+  updateApartment,
 } = require("../services/adminServices");
 const {
   sendSucessResponse,
@@ -147,7 +148,22 @@ const changeCondominium = async (req, res) => {
     sendSucessResponse(
       res,
       { condominiumId, condominiumName },
-      "Bloco atualizado"
+      "Condomínio atualizado"
+    );
+  } catch (error) {
+    sendMessageError(res, error);
+  }
+};
+const changeApartment = async (req, res) => {
+  try {
+    const { apartmentName } = req.body;
+    checkDataFields(apartmentName);
+    const apartmentId = req.params.id;
+    await updateApartment(apartmentName, apartmentId);
+    sendSucessResponse(
+      res,
+      { apartmentId, apartmentName },
+      "Apartamento atualizado"
     );
   } catch (error) {
     sendMessageError(res, error);
@@ -163,4 +179,5 @@ module.exports = {
   changeTransaction,
   changeSection,
   changeCondominium,
+  changeApartment,
 };
