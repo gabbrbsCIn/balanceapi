@@ -168,6 +168,24 @@ const updateCondominium = async (condominiumName, condominiumId) => {
   return condominium;
 };
 
+const updateApartment = async (apartmentName, apartmentId) => {
+  const apartment = await Apartment.update(
+    {
+      name: apartmentName,
+    },
+    {
+      where: {
+        id: apartmentId,
+      },
+    }
+  );
+  if (apartment[0] == 0) {
+    throw new HandlerError("ID do apartamento inválido", 400);
+  }
+
+  return apartment;
+};
+
 module.exports = {
   checkDataFields,
   createCondominium,
@@ -183,4 +201,5 @@ module.exports = {
   updateTransaction,
   updateSection,
   updateCondominium,
+  updateApartment
 };
