@@ -15,5 +15,6 @@ router.put("/transaction/update/:id", authenticateToken, admin, adminControllers
 router.put("/section/update/:id", authenticateToken, admin, adminControllers.changeSection);
 router.put("/condominium/update/:id", authenticateToken, admin, adminControllers.changeCondominium);
 router.put("/apartment/update/:id", authenticateToken, admin, adminControllers.changeApartment);
+router.delete("/transaction/delete/:id", authenticateToken, admin, adminControllers.deleteTransaction);
 
 module.exports = router;
