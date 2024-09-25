@@ -210,6 +210,18 @@ const deleteApartmentById = async (apartmentId) => {
   return apartament;
 };
 
+const deleteSectionById = async (sectionId) => {
+  const section = await Section.destroy({
+    where: {
+      id: sectionId,
+    },
+  });
+  if (section == 0) {
+    throw new HandlerError("ID do bloco inválido", 400);
+  }
+  return section;
+};
+
 module.exports = {
   checkDataFields,
   createCondominium,
@@ -228,4 +240,5 @@ module.exports = {
   updateApartment,
   deleteTransactionById,
   deleteApartmentById,
+  deleteSectionById
 };
