@@ -198,6 +198,18 @@ const deleteTransactionById = async (transactionId) => {
   return transaction;
 };
 
+const deleteApartmentById = async (apartmentId) => {
+  const apartament = await Apartment.destroy({
+    where: {
+      id: apartmentId,
+    },
+  });
+  if (apartament == 0) {
+    throw new HandlerError("ID da transação inválido", 400);
+  }
+  return apartament;
+};
+
 module.exports = {
   checkDataFields,
   createCondominium,
@@ -215,4 +227,5 @@ module.exports = {
   updateCondominium,
   updateApartment,
   deleteTransactionById,
+  deleteApartmentById,
 };
