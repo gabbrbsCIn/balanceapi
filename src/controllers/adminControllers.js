@@ -14,6 +14,7 @@ const {
   updateSection,
   updateCondominium,
   updateApartment,
+  deleteTransactionById,
 } = require("../services/adminServices");
 const {
   sendSucessResponse,
@@ -170,6 +171,16 @@ const changeApartment = async (req, res) => {
   }
 };
 
+const deleteTransaction = async (req, res) => {
+  try {
+    const transactionId = req.params.id;
+    await deleteTransactionById(transactionId);
+    sendSucessResponse(res, transactionId, "Transação removida com sucesso");
+  } catch (error) {
+    sendMessageError(res, error);
+  }
+};
+
 module.exports = {
   condominium,
   section,
@@ -180,4 +191,5 @@ module.exports = {
   changeSection,
   changeCondominium,
   changeApartment,
+  deleteTransaction,
 };
