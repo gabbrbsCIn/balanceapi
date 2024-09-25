@@ -16,6 +16,7 @@ const {
   updateApartment,
   deleteTransactionById,
   deleteApartmentById,
+  deleteSectionById,
 } = require("../services/adminServices");
 const {
   sendSucessResponse,
@@ -192,6 +193,16 @@ const deleteApartment = async (req, res) => {
   }
 };
 
+const deleteSection = async (req, res) => {
+  try {
+    const sectionId = req.params.id;
+    await deleteSectionById(sectionId);
+    sendSucessResponse(res, sectionId, "Bloco removido com sucesso");
+  } catch (error) {
+    sendMessageError(res, error);
+  }
+};
+
 module.exports = {
   condominium,
   section,
@@ -204,4 +215,5 @@ module.exports = {
   changeApartment,
   deleteTransaction,
   deleteApartment,
+  deleteSection
 };
