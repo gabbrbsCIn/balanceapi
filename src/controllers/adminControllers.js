@@ -41,7 +41,8 @@ const condominium = async (req, res) => {
 
 const section = async (req, res) => {
   try {
-    const { condominiumId, sectionName } = req.body;
+    const { sectionName } = req.body;
+    const condominiumId = req.condominiumId;
     checkDataFields(sectionName);
     const section = await createSection(sectionName, condominiumId);
     sendSucessResponse(res, section, "Bloco criado com sucesso");
@@ -146,7 +147,7 @@ const changeCondominium = async (req, res) => {
   try {
     const { condominiumName } = req.body;
     checkDataFields(condominiumName);
-    const condominiumId = req.params.id;
+    const condominiumId = req.condominiumId;
     await updateCondominium(condominiumName, condominiumId);
     sendSucessResponse(
       res,
@@ -215,5 +216,5 @@ module.exports = {
   changeApartment,
   deleteTransaction,
   deleteApartment,
-  deleteSection
+  deleteSection,
 };
