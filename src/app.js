@@ -7,6 +7,8 @@ const PORT = process.env.PORT;
 
 const authRoutes = require("./routes/authRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+const { admin } = require("./middlewares/admin.middleware");
+const { authenticateToken } = require("./middlewares/auth.middleware");
 
 app.use(express.json());
 
@@ -15,9 +17,7 @@ app.listen(PORT, () => {
 });
 
 app.use("/", authRoutes);
-app.use("/admin", adminRoutes);
-
-
+app.use("/admin/:condominiumId", authenticateToken, admin, adminRoutes);
 
 (async () => {
   try {
