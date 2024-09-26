@@ -2,11 +2,11 @@ const express = require("express");
 
 const router = express.Router();
 
-const adminControllers = require("../../controllers/adminControllers");
+const apartmentControllers = require("../../controllers/apartment/apartmentControllers");
 
-router.post("/", adminControllers.apartment);
-router.patch("/resident", adminControllers.residentInAparment);
-router.put("/update/:id", adminControllers.changeApartment);
-router.delete("/delete/:id", adminControllers.deleteApartment);
+router.post("/", apartmentControllers.apartment);
+router.patch("/resident", apartmentControllers.residentInAparment);
+router.put("/update/:id", apartmentControllers.changeApartment);
+router.delete("/delete/:id", apartmentControllers.deleteApartment);
 
 module.exports = router;
