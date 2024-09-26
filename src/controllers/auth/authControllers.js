@@ -7,7 +7,7 @@ const {
   checkAuthDataFields,
   addTokenToBlackList,
   extractTokenFromHeader,
-} = require("../services/authServices");
+} = require("../../services/authServices");
 
 const register = async (req, res) => {
   try {
@@ -45,9 +45,6 @@ const login = async (req, res) => {
   }
 };
 
-const test = async (req, res) => {
-  return res.send(req.user.name).status(200);
-};
 
 const logout = async (req, res) => {
   const token = extractTokenFromHeader(req.headers);
@@ -63,6 +60,5 @@ const logout = async (req, res) => {
 module.exports = {
   register,
   login,
-  logout,
-  test,
+  logout
 };
