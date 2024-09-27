@@ -12,6 +12,7 @@ const adminApartmentRoutes = require("./routes/apartment/adminApartmentRoutes");
 const adminCondominiumRoutes = require("./routes/condominium/adminCondominiumRoutes");
 const condominiumRoutes = require("./routes/condominium/condominiumRoutes");
 const adminSectionRoutes = require("./routes/section/adminSectionRoutes");
+const residentRoutes = require("./routes/resident/residentRoutes")
 
 const { admin } = require("./middlewares/admin.middleware");
 const { authenticateToken } = require("./middlewares/auth.middleware");
@@ -23,7 +24,7 @@ app.listen(PORT, () => {
 });
 
 app.use("/", authRoutes);
-
+app.use("/resident", authenticateToken, residentRoutes)
 app.use("/admin/:condominiumId/transaction", authenticateToken, admin, adminTransactionRoutes);
 app.use("/admin/:condominiumId/apartment", authenticateToken, admin, adminApartmentRoutes);
 app.use("/admin/:condominiumId/condominium", authenticateToken, admin, adminCondominiumRoutes);
