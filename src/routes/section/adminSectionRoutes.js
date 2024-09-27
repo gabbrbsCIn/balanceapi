@@ -2,9 +2,10 @@ const express = require("express");
 
 const router = express.Router();
 
-const adminControllers = require("../../controllers/adminControllers");
+const sectionControllers = require("../../controllers/section/sectionControllers");
 
-router.post("/", adminControllers.section);
-router.put("/update/:id", adminControllers.changeSection);
-router.delete("/delete/:id", adminControllers.deleteSection);
+router.post("/", sectionControllers.section);
+router.put("/update/:id", sectionControllers.changeSection);
+router.delete("/delete/:id", sectionControllers.deleteSection);
+
 module.exports = router;

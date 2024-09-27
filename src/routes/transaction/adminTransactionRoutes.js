@@ -2,11 +2,11 @@ const express = require("express");
 
 const router = express.Router();
 
-const adminControllers = require("../../controllers/adminControllers")
+const transactionControllers = require("../../controllers/transaction/transactionControllers")
 
+router.post("/", transactionControllers.transaction);
+router.put("/update/:id", transactionControllers.changeTransaction);
+router.delete("/delete/:id", transactionControllers.deleteTransaction);
 
-router.post("/", adminControllers.transaction);
-router.put("/update/:id", adminControllers.changeTransaction);
-router.delete("/delete/:id", adminControllers.deleteTransaction);
 
 module.exports = router;
