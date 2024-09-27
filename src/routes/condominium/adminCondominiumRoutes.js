@@ -6,4 +6,5 @@ const condominiumControllers = require("../../controllers/condominium/condominiu
 
 router.put("/update/:id", condominiumControllers.changeCondominium);
 
+
 module.exports = router;
