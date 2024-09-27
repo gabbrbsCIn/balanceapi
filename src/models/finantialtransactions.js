@@ -8,7 +8,6 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    
   }
   FinantialTransactions.init(
     {
@@ -30,13 +29,21 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.FLOAT,
         allowNull: false,
       },
-      residentId: {  
+      residentId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: "Residents",
           key: "id",
         },
+      },
+      transactionData: {
+        type: DataTypes.DATE,
+        allowNull: false,
+      },
+      paid: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
       },
     },
     {
@@ -45,6 +52,5 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  
   return FinantialTransactions;
 };

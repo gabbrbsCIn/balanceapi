@@ -1,5 +1,11 @@
 const HandlerError = require("../errors/handlerError");
-const { Condominium, Section, Apartment, Resident } = require("../models");
+const {
+  Condominium,
+  Section,
+  Apartment,
+  Resident,
+  FinantialTransactions,
+} = require("../models");
 
 const checkDataFields = (name) => {
   if (!name) {
@@ -94,6 +100,128 @@ const addResidentToApartment = async (residentId, apartmentId) => {
   return apartment;
 };
 
+const checkTransactionDataFields = async (transactionData) => {
+  if (
+    !transactionData.name ||
+    !transactionData.type ||
+    !transactionData.value ||
+    !transactionData.residentId ||
+    !transactionData.transactionData ||
+    !transactionData.paid
+  ) {
+    throw new HandlerError("Há campos não preenchidos", 400);
+  }
+  return transactionData;
+};
+
+const createTransaction = async (transactionData) => {
+  const transaction = await FinantialTransactions.create(transactionData);
+
+  return transaction;
+};
+
+const updateTransaction = async (transactionData, transactionId) => {
+  const transaction = await FinantialTransactions.update(transactionData, {
+    where: {
+      id: transactionId,
+    },
+  });
+
+  if (transaction[0] == 0) {
+    throw new HandlerError("ID da transação inválida", 400);
+  }
+  return transaction;
+};
+
+const updateSection = async (sectionName, sectionId) => {
+  const section = await Section.update(
+    {
+      name: sectionName,
+    },
+    {
+      where: {
+        id: sectionId,
+      },
+    }
+  );
+  if (section[0] == 0) {
+    throw new HandlerError("ID do bloco inválida", 400);
+  }
+
+  return section;
+};
+const updateCondominium = async (condominiumName, condominiumId) => {
+  const condominium = await Condominium.update(
+    {
+      name: condominiumName,
+    },
+    {
+      where: {
+        id: condominiumId,
+      },
+    }
+  );
+  if (condominium[0] == 0) {
+    throw new HandlerError("ID do condomínio inválido", 400);
+  }
+
+  return condominium;
+};
+
+const updateApartment = async (apartmentName, apartmentId) => {
+  const apartment = await Apartment.update(
+    {
+      name: apartmentName,
+    },
+    {
+      where: {
+        id: apartmentId,
+      },
+    }
+  );
+  if (apartment[0] == 0) {
+    throw new HandlerError("ID do apartamento inválido", 400);
+  }
+
+  return apartment;
+};
+
+const deleteTransactionById = async (transactionId) => {
+  const transaction = await FinantialTransactions.destroy({
+    where: {
+      id: transactionId,
+    },
+  });
+  if (transaction == 0) {
+    throw new HandlerError("ID da transação inválido", 400);
+  }
+  return transaction;
+};
+
+const deleteApartmentById = async (apartmentId) => {
+  const apartament = await Apartment.destroy({
+    where: {
+      id: apartmentId,
+    },
+  });
+  if (apartament == 0) {
+    throw new HandlerError("ID da transação inválido", 400);
+  }
+  return apartament;
+};
+
+const deleteSectionById = async (sectionId) => {
+  const section = await Section.destroy({
+    where: {
+      id: sectionId,
+    },
+  });
+  if (section == 0) {
+    throw new HandlerError("ID do bloco inválido", 400);
+  }
+  return section;
+};
+
 module.exports = {
   checkDataFields,
   createCondominium,
@@ -104,4 +232,13 @@ module.exports = {
   findResidentById,
   findApartmentById,
   addResidentToApartment,
+  checkTransactionDataFields,
+  createTransaction,
+  updateTransaction,
+  updateSection,
+  updateCondominium,
+  updateApartment,
+  deleteTransactionById,
+  deleteApartmentById,
+  deleteSectionById
 };

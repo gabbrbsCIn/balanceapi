@@ -5,8 +5,17 @@ const app = express();
 const db = require("./models");
 const PORT = process.env.PORT;
 
-const authRoutes = require("./routes/authRoutes");
-const adminRoutes = require("./routes/adminRoutes");
+const authRoutes = require("./routes/auth/authRoutes");
+
+const adminTransactionRoutes = require("./routes/transaction/adminTransactionRoutes");
+const adminApartmentRoutes = require("./routes/apartment/adminApartmentRoutes");
+const adminCondominiumRoutes = require("./routes/condominium/adminCondominiumRoutes");
+const condominiumRoutes = require("./routes/condominium/condominiumRoutes");
+const adminSectionRoutes = require("./routes/section/adminSectionRoutes");
+const residentRoutes = require("./routes/resident/residentRoutes")
+
+const { admin } = require("./middlewares/admin.middleware");
+const { authenticateToken } = require("./middlewares/auth.middleware");
 
 app.use(express.json());
 
@@ -15,9 +24,12 @@ app.listen(PORT, () => {
 });
 
 app.use("/", authRoutes);
-app.use("/admin", adminRoutes);
-
-
+app.use("/resident", authenticateToken, residentRoutes)
+app.use("/admin/:condominiumId/transaction", authenticateToken, admin, adminTransactionRoutes);
+app.use("/admin/:condominiumId/apartment", authenticateToken, admin, adminApartmentRoutes);
+app.use("/admin/:condominiumId/condominium", authenticateToken, admin, adminCondominiumRoutes);
+app.use("/condominium", condominiumRoutes);
+app.use("/admin/:condominiumId/section", authenticateToken, admin, adminSectionRoutes);
 
 (async () => {
   try {

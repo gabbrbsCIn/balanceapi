@@ -8,9 +8,18 @@ const {
   findApartmentById,
   findResidentById,
   addResidentToApartment,
+  checkTransactionDataFields,
+  createTransaction,
+  updateTransaction,
+  updateSection,
+  updateCondominium,
+  updateApartment,
+  deleteTransactionById,
+  deleteApartmentById,
+  deleteSectionById,
 } = require("../services/adminServices");
 const {
-  sendSuccessResponse,
+  sendSucessResponse,
   sendMessageError,
 } = require("../services/authServices");
 
@@ -20,7 +29,7 @@ const condominium = async (req, res) => {
     checkDataFields(name);
     const residentAdminId = req.user.id;
     const condominium = await createCondominium(name, residentAdminId);
-    sendSuccessResponse(res, condominium, "Condomínio criado com sucesso");
+    sendSucessResponse(res, condominium, "Condomínio criado com sucesso");
   } catch (error) {
     if (error instanceof HandlerError) {
       sendMessageError(res, error);
@@ -32,10 +41,11 @@ const condominium = async (req, res) => {
 
 const section = async (req, res) => {
   try {
-    const { condominiumId, sectionName } = req.body;
+    const { sectionName } = req.body;
+    const condominiumId = req.condominiumId;
     checkDataFields(sectionName);
     const section = await createSection(sectionName, condominiumId);
-    sendSuccessResponse(res, section, "Bloco criado com sucesso");
+    sendSucessResponse(res, section, "Bloco criado com sucesso");
   } catch (error) {
     if (error instanceof HandlerError) {
       sendMessageError(res, error);
@@ -50,7 +60,7 @@ const apartment = async (req, res) => {
     const { sectionId, name } = req.body;
     checkApartmentDataFields(sectionId, name);
     const apartment = await createApartment(name, sectionId);
-    sendSuccessResponse(res, apartment, "Apartamento criado com sucesso");
+    sendSucessResponse(res, apartment, "Apartamento criado com sucesso");
   } catch (error) {
     if (error instanceof HandlerError) {
       sendMessageError(res, error);
@@ -68,7 +78,127 @@ const residentInAparment = async (req, res) => {
     await findApartmentById(apartmentId);
     await addResidentToApartment(residentId, apartmentId);
 
-    sendSuccessResponse(res, apartmentId, "Adicionado morador ao apartamento");
+    sendSucessResponse(res, apartmentId, "Adicionado morador ao apartamento");
+  } catch (error) {
+    sendMessageError(res, error);
+  }
+};
+
+const transaction = async (req, res) => {
+  try {
+    const { name, type, value, residentId, transactionData, paid } = req.body;
+    const transaction = {
+      name,
+      type,
+      value,
+      residentId,
+      transactionData,
+      paid,
+    };
+    checkTransactionDataFields(transaction);
+    const newTransaction = await createTransaction(transaction);
+    sendSucessResponse(
+      res,
+      newTransaction,
+      "Transação adicionada ao balanço do condomínio"
+    );
+  } catch (error) {
+    sendMessageError(res, error);
+  }
+};
+
+const changeTransaction = async (req, res) => {
+  try {
+    const { name, type, value, residentId, transactionData, paid } = req.body;
+    const transaction = {
+      name,
+      type,
+      value,
+      residentId,
+      transactionData,
+      paid,
+    };
+    checkTransactionDataFields(transaction);
+    const transactionId = req.params.id;
+    await updateTransaction(transaction, transactionId);
+    sendSucessResponse(
+      res,
+      { transactionId, transaction },
+      "Transação atualizada"
+    );
+  } catch (error) {
+    sendMessageError(res, error);
+  }
+};
+
+const changeSection = async (req, res) => {
+  try {
+    const { sectionName } = req.body;
+    checkDataFields(sectionName);
+    const sectionId = req.params.id;
+    await updateSection(sectionName, sectionId);
+    sendSucessResponse(res, { sectionId, sectionName }, "Bloco atualizado");
+  } catch (error) {
+    sendMessageError(res, error);
+  }
+};
+
+const changeCondominium = async (req, res) => {
+  try {
+    const { condominiumName } = req.body;
+    checkDataFields(condominiumName);
+    const condominiumId = req.condominiumId;
+    await updateCondominium(condominiumName, condominiumId);
+    sendSucessResponse(
+      res,
+      { condominiumId, condominiumName },
+      "Condomínio atualizado"
+    );
+  } catch (error) {
+    sendMessageError(res, error);
+  }
+};
+const changeApartment = async (req, res) => {
+  try {
+    const { apartmentName } = req.body;
+    checkDataFields(apartmentName);
+    const apartmentId = req.params.id;
+    await updateApartment(apartmentName, apartmentId);
+    sendSucessResponse(
+      res,
+      { apartmentId, apartmentName },
+      "Apartamento atualizado"
+    );
+  } catch (error) {
+    sendMessageError(res, error);
+  }
+};
+
+const deleteTransaction = async (req, res) => {
+  try {
+    const transactionId = req.params.id;
+    await deleteTransactionById(transactionId);
+    sendSucessResponse(res, transactionId, "Transação removida com sucesso");
+  } catch (error) {
+    sendMessageError(res, error);
+  }
+};
+
+const deleteApartment = async (req, res) => {
+  try {
+    const apartamentId = req.params.id;
+    await deleteApartmentById(apartamentId);
+    sendSucessResponse(res, apartamentId, "Apartmento removido com sucesso");
+  } catch (error) {
+    sendMessageError(res, error);
+  }
+};
+
+const deleteSection = async (req, res) => {
+  try {
+    const sectionId = req.params.id;
+    await deleteSectionById(sectionId);
+    sendSucessResponse(res, sectionId, "Bloco removido com sucesso");
   } catch (error) {
     sendMessageError(res, error);
   }
@@ -79,4 +209,12 @@ module.exports = {
   section,
   apartment,
   residentInAparment,
+  transaction,
+  changeTransaction,
+  changeSection,
+  changeCondominium,
+  changeApartment,
+  deleteTransaction,
+  deleteApartment,
+  deleteSection,
 };
