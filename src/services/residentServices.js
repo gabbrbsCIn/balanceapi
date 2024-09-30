@@ -8,6 +8,7 @@ const hasFilters = (req) => {
   if (Object.keys(req.query).length === 0) {
     return false;
   }
+  filterData = req.query;
   if (req.query.startDate || req.query.endDate) {
     filterData.transactionData = {};
     if (req.query.startDate) {
@@ -16,6 +17,8 @@ const hasFilters = (req) => {
     if (req.query.endDate) {
       filterData.transactionData[Op.lte] = req.query.endDate;
     }
+    delete filterData.startDate;
+    delete filterData.endDate;
   }
   return filterData;
 };
