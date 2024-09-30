@@ -24,11 +24,11 @@ app.listen(PORT, () => {
 });
 
 app.use("/", authRoutes);
-app.use("/resident", authenticateToken, residentRoutes)
 app.use("/admin/:condominiumId/transaction", authenticateToken, admin, adminTransactionRoutes);
 app.use("/admin/:condominiumId/apartment", authenticateToken, admin, adminApartmentRoutes);
 app.use("/admin/:condominiumId/condominium", authenticateToken, admin, adminCondominiumRoutes);
 app.use("/condominium", condominiumRoutes);
+app.use("/resident", authenticateToken, residentRoutes)
 app.use("/admin/:condominiumId/section", authenticateToken, admin, adminSectionRoutes);
 
 (async () => {
