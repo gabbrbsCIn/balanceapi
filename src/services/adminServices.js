@@ -247,5 +247,5 @@ module.exports = {
   deleteTransactionById,
   deleteApartmentById,
   deleteSectionById,
-  checkResidentDataFields
+  checkResidentDataFields,
 };
