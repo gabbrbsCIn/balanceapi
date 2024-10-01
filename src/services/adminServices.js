@@ -20,6 +20,12 @@ const checkApartmentDataFields = (sectionId, name) => {
   }
   return name;
 };
+const checkResidentDataFields = (email, name) => {
+  if (!email || !name) {
+    throw new HandlerError("Os campos são obrigatórios");
+  }
+  return name;
+};
 const checkResidentAdmin = async (condominiumId, residentId) => {
   const condominium = await Condominium.findOne({
     where: {
@@ -240,5 +246,6 @@ module.exports = {
   updateApartment,
   deleteTransactionById,
   deleteApartmentById,
-  deleteSectionById
+  deleteSectionById,
+  checkResidentDataFields
 };

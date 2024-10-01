@@ -1,6 +1,6 @@
 const { Op } = require("sequelize");
 const HandlerError = require("../errors/handlerError");
-const { FinantialTransactions } = require("../models");
+const { FinantialTransactions, Resident } = require("../models");
 const moment = require("moment");
 
 const hasFilters = (req) => {
@@ -52,8 +52,20 @@ const getTransactionsByFilter = async (filterData) => {
   return transactions;
 };
 
+const updateResidentById = async (data, residentId) => {
+  console.log(data, residentId)
+  const resident = await Resident.update(data, {
+    where: {
+      id: residentId,
+    },
+  });
+  console.log(resident);
+  return resident;
+};
+
 module.exports = {
   hasFilters,
   getTransactionsFromCurrentMonth,
   getTransactionsByFilter,
+  updateResidentById,
 };
