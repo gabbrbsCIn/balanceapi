@@ -7,5 +7,6 @@ const { checkResidentInCondominium } = require("../../middlewares/resident.middl
 
 router.get("/:condominiumId/balance", checkResidentInCondominium, residentControllers.balance);
 router.put("/:condominiumId/update", residentControllers.update);
+router.post("/:condominiumId/payment", residentControllers.payDebits);
 
 module.exports = router;

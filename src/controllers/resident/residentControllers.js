@@ -7,6 +7,7 @@ const {
   sendMessageError,
   checkAuthDataFields,
 } = require("../../services/authServices");
+const { generatePixQrCode } = require("../../services/paymentServices");
 const {
   hasFilters,
   getTransactionsFromCurrentMonth,
@@ -34,7 +35,7 @@ const balance = async (req, res) => {
     );
     sendSucessResponse(res, transaction, "Transações Coletadas");
   } catch (error) {
-    sendMessageError(res, error);
+    sendMessageError(res, error.message);
   }
 };
 
@@ -54,7 +55,18 @@ const update = async (req, res) => {
   }
 };
 
+const payDebits = async (req, res) => {
+  try {
+    const { transactionId } = req.body;
+    const response = await generatePixQrCode();
+    sendSucessResponse(res, response.qr_codes, "QR-Code gerado");
+  } catch (error) {
+    sendMessageError(res, error);
+  }
+};
+
 module.exports = {
   balance,
   update,
+  payDebits,
 };
