@@ -1,3 +1,4 @@
+const HandlerError = require("../../errors/handlerError");
 const {
   checkDataFields,
   checkResidentDataFields,
@@ -55,6 +56,25 @@ const update = async (req, res) => {
   }
 };
 
+const residentDebits = async (req, res) => {
+  try {
+    const condominiumId = req.condominiumId;
+    const residentId = req.user.id;
+    const filterData = { residentId: residentId, paid: false };
+    const transaction = await getTransactionsByFilter(
+      filterData,
+      condominiumId
+    );
+    sendSucessResponse(res, transaction, "Débitos coletados");
+  } catch (error) {
+    if (error instanceof HandlerError) {
+      sendMessageError(res, error);
+    } else {
+      res.status(500).send(error);
+    }
+  }
+};
+
 const payDebits = async (req, res) => {
   try {
     const { transactionId } = req.body;
@@ -69,4 +89,5 @@ module.exports = {
   balance,
   update,
   payDebits,
+  residentDebits,
 };
