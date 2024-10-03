@@ -17,7 +17,8 @@ router.get(
   checkResidentInCondominium,
   residentControllers.residentDebits
 );
+router.post("/completePayment", residentControllers.completePayment);
 router.put("/:condominiumId/update", residentControllers.update);
-router.post("/:condominiumId/payment", residentControllers.payDebits);
+router.post("/:condominiumId/payment", residentControllers.createOrder);
 
 module.exports = router;
