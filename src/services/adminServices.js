@@ -78,6 +78,7 @@ const findResidentById = async (residentId) => {
   if (!resident) {
     throw new HandlerError("Morador não encontrado", 404);
   }
+  return resident;
 };
 
 const findApartmentById = async (apartmentId) => {
