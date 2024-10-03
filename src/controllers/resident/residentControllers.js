@@ -2,6 +2,8 @@ const HandlerError = require("../../errors/handlerError");
 const {
   checkDataFields,
   checkResidentDataFields,
+  findResidentById,
+  updateTransaction,
 } = require("../../services/adminServices");
 const {
   sendSucessResponse,
@@ -75,12 +77,42 @@ const residentDebits = async (req, res) => {
   }
 };
 
-const payDebits = async (req, res) => {
+const createOrder = async (req, res) => {
   try {
     const { transactionId } = req.body;
-    const response = await generatePixQrCode();
-    sendSucessResponse(res, response.qr_codes, "QR-Code gerado");
+    const { condominiumId } = req.params;
+    const residentId = req.user.id;
+    const filterData = { id: transactionId };
+    const transaction = await getTransactionsByFilter(
+      filterData,
+      condominiumId
+    );
+    const resident = await findResidentById(residentId);
+    const response = await generatePixQrCode(transaction[0], resident);
+    sendSucessResponse(res, response.data, "QR-Code gerado");
   } catch (error) {
+    if (error instanceof HandlerError) {
+      sendMessageError(res, error);
+    } else {
+      console.log(error);
+      res.status(500).send(error);
+    }
+  }
+};
+
+const completePayment = async (req, res) => {
+  try {
+    const { charges, reference_id } = req.body;
+    const paymentStatus = charges[0].status;
+    const transactionId = reference_id;
+    if (paymentStatus === "PAID") {
+      await updateTransaction({ paid: true }, transactionId);
+      sendSucessResponse(res, transactionId, "Pagamento computado!");
+    } else {
+      res.send("Pagamento não foi realizado corretamente").status(500);
+    }
+  } catch (error) {
+    console.log(error);
     sendMessageError(res, error);
   }
 };
@@ -88,6 +120,7 @@ const payDebits = async (req, res) => {
 module.exports = {
   balance,
   update,
-  payDebits,
+  createOrder,
   residentDebits,
+  completePayment,
 };
