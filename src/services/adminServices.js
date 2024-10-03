@@ -106,14 +106,14 @@ const addResidentToApartment = async (residentId, apartmentId) => {
   return apartment;
 };
 
-const checkTransactionDataFields = async (transactionData) => {
+const checkTransactionDataFields = (transactionData) => {
   if (
     !transactionData.name ||
     !transactionData.type ||
     !transactionData.value ||
     !transactionData.residentId ||
     !transactionData.transactionData ||
-    !transactionData.paid
+    transactionData.paid === null
   ) {
     throw new HandlerError("Há campos não preenchidos", 400);
   }
