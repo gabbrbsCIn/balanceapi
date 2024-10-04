@@ -20,6 +20,12 @@ const checkApartmentDataFields = (sectionId, name) => {
   }
   return name;
 };
+const checkResidentDataFields = (email, name) => {
+  if (!email || !name) {
+    throw new HandlerError("Os campos são obrigatórios");
+  }
+  return name;
+};
 const checkResidentAdmin = async (condominiumId, residentId) => {
   const condominium = await Condominium.findOne({
     where: {
@@ -72,6 +78,7 @@ const findResidentById = async (residentId) => {
   if (!resident) {
     throw new HandlerError("Morador não encontrado", 404);
   }
+  return resident;
 };
 
 const findApartmentById = async (apartmentId) => {
@@ -100,14 +107,14 @@ const addResidentToApartment = async (residentId, apartmentId) => {
   return apartment;
 };
 
-const checkTransactionDataFields = async (transactionData) => {
+const checkTransactionDataFields = (transactionData) => {
   if (
     !transactionData.name ||
     !transactionData.type ||
     !transactionData.value ||
     !transactionData.residentId ||
     !transactionData.transactionData ||
-    !transactionData.paid
+    transactionData.paid === null
   ) {
     throw new HandlerError("Há campos não preenchidos", 400);
   }
@@ -240,5 +247,6 @@ module.exports = {
   updateApartment,
   deleteTransactionById,
   deleteApartmentById,
-  deleteSectionById
+  deleteSectionById,
+  checkResidentDataFields,
 };
