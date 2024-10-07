@@ -38,7 +38,7 @@ const balance = async (req, res) => {
     );
     sendSucessResponse(res, transaction, "Transações Coletadas");
   } catch (error) {
-    sendMessageError(res, error.message);
+    sendMessageError(res, error);
   }
 };
 
@@ -103,6 +103,7 @@ const createOrder = async (req, res) => {
 const completePayment = async (req, res) => {
   try {
     const { charges, reference_id } = req.body;
+    console.log(charges);
     const paymentStatus = charges[0].status;
     const transactionId = reference_id;
     if (paymentStatus === "PAID") {
