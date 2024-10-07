@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const { Resident } = require("../models");
 const jwt = require("jsonwebtoken");
 const HandlerError = require("../errors/handlerError");
+const client = require("../config/redisClient");
 require("dotenv").config();
 
 const checkAuthDataFields = (data, method) => {
@@ -88,13 +89,19 @@ const generateJWTToken = async (user) => {
   return token;
 };
 
-let blackListTokens = [];
-
-const addTokenToBlackList = (token) => {
-  blackListTokens.push(token);
+const getTokenRemainingTime = (token) => {
+  const decoded = jwt.decode(token);
+  const currentTime = Math.floor(Date.now() / 1000);
+  return decoded.exp - currentTime;
 };
-const checkTokenInBlackList = (token) => {
-  const isTokenInBlackList = blackListTokens.includes(token);
+
+const addTokenToBlackList = async (token) => {
+  const tokenRemainingTime = getTokenRemainingTime(token);
+  await client.set(token, "revoked", "EXP", tokenRemainingTime);
+  return token;
+};
+const checkTokenInBlackList = async (token) => {
+  const isTokenInBlackList = await client.get(token);
   if (isTokenInBlackList) {
     throw new HandlerError("Token não autorizado", 400);
   }
