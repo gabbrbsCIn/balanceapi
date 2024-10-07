@@ -36,7 +36,6 @@ const generatePixQrCode = async (transactionData, residentData) => {
     expirationDate.setHours(expirationDate.getHours() + 1);
     options.data.qr_codes[0].expiration_date = expirationDate;
     const response = await axios.request(options);
-    console.log(response);
     return response;
   } catch (error) {
     console.log(error);
