@@ -45,20 +45,16 @@ const login = async (req, res) => {
   }
 };
 
-
 const logout = async (req, res) => {
   const token = extractTokenFromHeader(req.headers);
-
   if (token) {
-    addTokenToBlackList(token);
-    res.clearCookie("token");
+    await addTokenToBlackList(token);
   }
-
   return sendSucessResponse(res, "logout", "Usuário Deslogado!");
 };
 
 module.exports = {
   register,
   login,
-  logout
+  logout,
 };

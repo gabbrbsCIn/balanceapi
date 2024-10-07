@@ -9,7 +9,7 @@ const {
 const authenticateToken = async (req, res, next) => {
   try {
     const token = extractTokenFromHeader(req.headers);
-    checkTokenInBlackList(token);
+    await checkTokenInBlackList(token);
     const decodedToken = verifyJWTToken(token);
     req.user = decodedToken;
     next();
