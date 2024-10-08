@@ -44,20 +44,20 @@ const getTransactionsFromCurrentMonth = async (currentMonth, condominiumId) => {
     include: {
       model: Resident,
       required: true,
-      attributes : [],
+      attributes: [],
       include: {
         model: Apartment,
         required: true,
-        attributes : [],
+        attributes: [],
         include: {
           model: Section,
           required: true,
-          attributes : [],
+          attributes: [],
           include: {
             model: Condominium,
             where: { id: condominiumId },
             required: true,
-            attributes : [],
+            attributes: [],
           },
         },
       },
@@ -75,20 +75,20 @@ const getTransactionsByFilter = async (filterData, condominiumId) => {
     include: {
       model: Resident,
       required: true,
-      attributes : [],
+      attributes: [],
       include: {
         model: Apartment,
         required: true,
-        attributes : [],
+        attributes: [],
         include: {
           model: Section,
           required: true,
-          attributes : [],
+          attributes: [],
           include: {
             model: Condominium,
             where: { id: condominiumId },
             required: true,
-            attributes : [],
+            attributes: [],
           },
         },
       },
@@ -137,10 +137,19 @@ const findCondominiumByResidentId = async (residentId, condominiumId) => {
   return resident;
 };
 
+const getBalanceValueFromTransactions = async (transactions) => {
+  let balanceValue = 0.0;
+  for (let transaction of transactions) {
+    balanceValue = balanceValue + transaction.value;
+  }
+  return balanceValue;
+};
+
 module.exports = {
   hasFilters,
   getTransactionsFromCurrentMonth,
   getTransactionsByFilter,
   updateResidentById,
   findCondominiumByResidentId,
+  getBalanceValueFromTransactions,
 };
