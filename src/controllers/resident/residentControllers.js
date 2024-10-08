@@ -16,6 +16,7 @@ const {
   getTransactionsFromCurrentMonth,
   getTransactionsByFilter,
   updateResidentById,
+  getBalanceValueFromTransactions,
 } = require("../../services/residentServices");
 
 const balance = async (req, res) => {
@@ -25,18 +26,19 @@ const balance = async (req, res) => {
     if (!filterData) {
       const today = new Date();
       const currentMonth = today.toISOString().slice(0, 7);
-      const transaction = await getTransactionsFromCurrentMonth(
+      let transactions = await getTransactionsFromCurrentMonth(
         currentMonth,
         condominiumId
       );
-      sendSucessResponse(res, transaction, "Transações Coletadas");
-      return transaction;
+      const balanceValue = await getBalanceValueFromTransactions(transactions);
+      transactions.push({ balanceValue: balanceValue });
+      sendSucessResponse(res, transactions, "Transações Coletadas");
+      return transactions;
     }
-    const transaction = await getTransactionsByFilter(
-      filterData,
-      condominiumId
-    );
-    sendSucessResponse(res, transaction, "Transações Coletadas");
+    let transactions = await getTransactionsByFilter(filterData, condominiumId);
+    const balanceValue = await getBalanceValueFromTransactions(transactions);
+    transactions.push({ balanceValue: balanceValue });
+    sendSucessResponse(res, transactions, "Transações Coletadas");
   } catch (error) {
     sendMessageError(res, error);
   }

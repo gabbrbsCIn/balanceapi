@@ -142,7 +142,6 @@ const getBalanceValueFromTransactions = async (transactions) => {
   for (let transaction of transactions) {
     balanceValue = balanceValue + transaction.value;
   }
-  console.log(balanceValue);
   return balanceValue;
 };
 
