@@ -7,12 +7,8 @@ Balance API é uma aplicação desenvolvida para facilitar a gestão financeira 
 - [Visão Geral](#visão-geral)
 - [Tecnologias Utilizadas](#tecnologias-utilizadas)
 - [Instalação](#instalação)
-- [Configuração](#configuração)
 - [Execução](#execução)
-- [Endpoints](#endpoints)
 - [Migrações](#migrações)
-- [Contribuições](#contribuições)
-- [Licença](#licença)
 
 ## Visão Geral
 
@@ -25,6 +21,8 @@ A Balance API oferece um conjunto de serviços que auxiliam na gestão do balan�
 - **Sequelize** (ORM para gerenciamento de banco de dados)
 - **MySQL** (Banco de dados relacional)
 - **JavaScript**
+- **Redis**
+- **Railway**
   
 ## Instalação
 
