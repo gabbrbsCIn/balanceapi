@@ -56,4 +56,7 @@ Para reverter:
 npx sequelize-cli db:migrate:undo
 ```
 
+## Documentação da API (Postman)
+https://documenter.getpostman.com/view/29686411/2sAXxS8XNq
+
 
