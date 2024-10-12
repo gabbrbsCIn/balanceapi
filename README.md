@@ -45,7 +45,7 @@ Para rodar a aplicação:
   npm start
 ``` 
 
-### Migrações
+## Migrações
 
 Para rodar as migrações do banco de dados:
 ```bash
