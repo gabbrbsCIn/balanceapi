@@ -1,5 +1,5 @@
 const { checkTransactionDataFields, createTransaction, updateTransaction, deleteTransactionById } = require("../../services/adminServices");
-const { sendMessageError, sendSucessResponse } = require("../../services/authServices");
+const { sendMessageError, sendSuccessResponse } = require("../../services/authServices");
 
 const transaction = async (req, res) => {
     try {
@@ -14,7 +14,7 @@ const transaction = async (req, res) => {
         };
         checkTransactionDataFields(transaction);
         const newTransaction = await createTransaction(transaction);
-        sendSucessResponse(
+        sendSuccessResponse(
             res,
             newTransaction,
             "Transação adicionada ao balanço do condomínio"
@@ -38,7 +38,7 @@ const changeTransaction = async (req, res) => {
         checkTransactionDataFields(transaction);
         const transactionId = req.params.id;
         await updateTransaction(transaction, transactionId);
-        sendSucessResponse(
+        sendSuccessResponse(
             res,
             { transactionId, transaction },
             "Transação atualizada"
@@ -52,7 +52,7 @@ const deleteTransaction = async (req, res) => {
     try {
         const transactionId = req.params.id;
         await deleteTransactionById(transactionId);
-        sendSucessResponse(res, transactionId, "Transação removida com sucesso");
+        sendSuccessResponse(res, transactionId, "Transação removida com sucesso");
     } catch (error) {
         sendMessageError(res, error);
     }
