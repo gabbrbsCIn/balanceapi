@@ -6,7 +6,7 @@ const {
   updateTransaction,
 } = require("../../services/adminServices");
 const {
-  sendSucessResponse,
+  sendSuccessResponse,
   sendMessageError,
   checkAuthDataFields,
 } = require("../../services/authServices");
@@ -32,13 +32,13 @@ const balance = async (req, res) => {
       );
       const balanceValue = await getBalanceValueFromTransactions(transactions);
       transactions.push({ balanceValue: balanceValue });
-      sendSucessResponse(res, transactions, "Transações Coletadas");
+      sendSuccessResponse(res, transactions, "Transações Coletadas");
       return transactions;
     }
     let transactions = await getTransactionsByFilter(filterData, condominiumId);
     const balanceValue = await getBalanceValueFromTransactions(transactions);
     transactions.push({ balanceValue: balanceValue });
-    sendSucessResponse(res, transactions, "Transações Coletadas");
+    sendSuccessResponse(res, transactions, "Transações Coletadas");
   } catch (error) {
     sendMessageError(res, error);
   }
@@ -54,7 +54,7 @@ const update = async (req, res) => {
     checkResidentDataFields(email, username);
     const residentId = req.user.id;
     await updateResidentById(data, residentId);
-    sendSucessResponse(res, residentId, "Usuário atualizado!");
+    sendSuccessResponse(res, residentId, "Usuário atualizado!");
   } catch (error) {
     sendMessageError(res, error);
   }
@@ -69,7 +69,7 @@ const residentDebits = async (req, res) => {
       filterData,
       condominiumId
     );
-    sendSucessResponse(res, transaction, "Débitos coletados");
+    sendSuccessResponse(res, transaction, "Débitos coletados");
   } catch (error) {
     if (error instanceof HandlerError) {
       sendMessageError(res, error);
@@ -91,7 +91,7 @@ const createOrder = async (req, res) => {
     );
     const resident = await findResidentById(residentId);
     const response = await generatePixQrCode(transaction[0], resident);
-    sendSucessResponse(res, response.data, "QR-Code gerado");
+    sendSuccessResponse(res, response.data, "QR-Code gerado");
   } catch (error) {
     if (error instanceof HandlerError) {
       sendMessageError(res, error);
@@ -110,7 +110,7 @@ const completePayment = async (req, res) => {
     const transactionId = reference_id;
     if (paymentStatus === "PAID") {
       await updateTransaction({ paid: true }, transactionId);
-      sendSucessResponse(res, transactionId, "Pagamento computado!");
+      sendSuccessResponse(res, transactionId, "Pagamento computado!");
     } else {
       res.send("Pagamento não foi realizado corretamente").status(500);
     }

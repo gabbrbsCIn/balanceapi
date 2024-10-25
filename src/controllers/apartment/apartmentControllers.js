@@ -1,5 +1,5 @@
 const { createApartment, checkApartmentDataFields, findApartmentById, findResidentById, addResidentToApartment, updateApartment, deleteApartmentById } = require("../../services/adminServices")
-const { sendMessageError, sendSucessResponse } = require("../../services/authServices");
+const { sendMessageError, sendSuccessResponse } = require("../../services/authServices");
 const HandlerError = require("../../errors/handlerError");
 
 const apartment = async (req, res) => {
@@ -7,7 +7,7 @@ const apartment = async (req, res) => {
         const { sectionId, name } = req.body;
         checkApartmentDataFields(sectionId, name);
         const apartment = await createApartment(name, sectionId);
-        sendSucessResponse(res, apartment, "Apartamento criado com sucesso");
+        sendSuccessResponse(res, apartment, "Apartamento criado com sucesso");
     } catch (error) {
         if (error instanceof HandlerError) {
             sendMessageError(res, error);
@@ -25,7 +25,7 @@ const residentInAparment = async (req, res) => {
         await findApartmentById(apartmentId);
         await addResidentToApartment(residentId, apartmentId);
 
-        sendSucessResponse(res, apartmentId, "Adicionado morador ao apartamento");
+        sendSuccessResponse(res, apartmentId, "Adicionado morador ao apartamento");
     } catch (error) {
         sendMessageError(res, error);
     }
@@ -37,7 +37,7 @@ const changeApartment = async (req, res) => {
         checkDataFields(apartmentName);
         const apartmentId = req.params.id;
         await updateApartment(apartmentName, apartmentId);
-        sendSucessResponse(
+        sendSuccessResponse(
             res,
             { apartmentId, apartmentName },
             "Apartamento atualizado"
@@ -51,7 +51,7 @@ const deleteApartment = async (req, res) => {
     try {
         const apartamentId = req.params.id;
         await deleteApartmentById(apartamentId);
-        sendSucessResponse(res, apartamentId, "Apartmento removido com sucesso");
+        sendSuccessResponse(res, apartamentId, "Apartmento removido com sucesso");
     } catch (error) {
         sendMessageError(res, error);
     }

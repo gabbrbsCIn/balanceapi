@@ -6,7 +6,7 @@ const {
 } = require("../../services/adminServices");
 const {
   sendMessageError,
-  sendSucessResponse,
+  sendSuccessResponse,
 } = require("../../services/authServices");
 const HandlerError = require("../../errors/handlerError");
 
@@ -16,7 +16,7 @@ const section = async (req, res) => {
     const condominiumId = req.condominiumId;
     checkDataFields(sectionName);
     const section = await createSection(sectionName, condominiumId);
-    sendSucessResponse(res, section, "Bloco criado com sucesso");
+    sendSuccessResponse(res, section, "Bloco criado com sucesso");
   } catch (error) {
     if (error instanceof HandlerError) {
       sendMessageError(res, error);
@@ -32,7 +32,7 @@ const changeSection = async (req, res) => {
     checkDataFields(sectionName);
     const sectionId = req.params.id;
     await updateSection(sectionName, sectionId);
-    sendSucessResponse(res, { sectionId, sectionName }, "Bloco atualizado");
+    sendSuccessResponse(res, { sectionId, sectionName }, "Bloco atualizado");
   } catch (error) {
     sendMessageError(res, error);
   }
@@ -42,7 +42,7 @@ const deleteSection = async (req, res) => {
   try {
     const sectionId = req.params.id;
     await deleteSectionById(sectionId);
-    sendSucessResponse(res, sectionId, "Bloco removido com sucesso");
+    sendSuccessResponse(res, sectionId, "Bloco removido com sucesso");
   } catch (error) {
     sendMessageError(res, error);
   }
