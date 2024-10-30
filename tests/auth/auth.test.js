@@ -1,13 +1,25 @@
-const { checkDataFields } = require("../../src/services/adminServices");
+const request = require("supertest");
+const app = require("../../src/app");
+const authServices = require("../../src/services/authServices");
 
-describe('checkDataFields', () => {
-    test('should throw a error when the name is not given', () => {
-      expect(() => checkDataFields()).toThrow(HandlerError);   
-      expect(() => checkDataFields()).toThrow("Os campos são obrigatórios");  
-    });
-    test('should return the name when its given', () => {
-      const name = 'Gabriel';
-      const result = checkDataFields(name);
-      expect(result).toBe(name);  
-    });
+jest.mock("../../src/models", () => ({
+  db: jest.fn(),
+}));
+
+jest.mock("../../src/services/authServices", () => ({
+  ...jest.requireActual("../../src/services/authServices"),
+  sendMessageError: jest.fn((res, error) =>
+    res.status(error.statusCode).json({ message: error.message })
+  ),
+}));
+describe("POST /register", () => {
+  it("should return 404 when not all data is provided", async () => {
+    const response = await request(app)
+      .post("/register")
+      .send({ username: "gabriel" })
+      .expect(400);
+
+    expect(authServices.sendMessageError).toHaveBeenCalledTimes(1);
+    expect(response.body.message).toBe("Todos os campos são obrigatórios");
   });
+});
