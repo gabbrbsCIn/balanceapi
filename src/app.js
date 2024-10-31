@@ -20,10 +20,6 @@ const { authenticateToken } = require("./middlewares/auth.middleware");
 
 app.use(express.json());
 
-app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}...`);
-});
-
 app.use("/", authRoutes);
 app.use(
   "/admin/:condominiumId/transaction",
@@ -52,14 +48,5 @@ app.use(
   adminSectionRoutes
 );
 
-(async () => {
-  try {
-    await db.sequelize.authenticate();
-    await client.connect();
-    console.log("Conexão com o banco de dados estabilizada com sucesso");
-  } catch (error) {
-    console.error("Erro ao conectar ao banco de dados", error);
-  }
-})();
 
 module.exports = app;
