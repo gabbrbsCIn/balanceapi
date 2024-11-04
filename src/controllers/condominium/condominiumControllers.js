@@ -1,5 +1,5 @@
 const { createCondominium, updateCondominium, checkDataFields } = require("../../services/adminServices");
-const { sendMessageError, sendSucessResponse } = require("../../services/authServices");
+const { sendMessageError, sendSuccessResponse } = require("../../services/authServices");
 const HandlerError = require("../../errors/handlerError");
 
 const condominium = async (req, res) => {
@@ -8,7 +8,7 @@ const condominium = async (req, res) => {
         checkDataFields(name);
         const residentAdminId = req.user.id;
         const condominium = await createCondominium(name, residentAdminId);
-        sendSucessResponse(res, condominium, "Condomínio criado com sucesso");
+        sendSuccessResponse(res, condominium, "Condomínio criado com sucesso");
     } catch (error) {
         if (error instanceof HandlerError) {
             sendMessageError(res, error);
@@ -24,7 +24,7 @@ const changeCondominium = async (req, res) => {
         checkDataFields(condominiumName);
         const condominiumId = req.params.id;
         await updateCondominium(condominiumName, condominiumId);
-        sendSucessResponse(
+        sendSuccessResponse(
             res,
             { condominiumId, condominiumName },
             "Condomínio atualizado"

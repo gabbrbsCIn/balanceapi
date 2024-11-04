@@ -1,22 +1,22 @@
-const bcrypt = require("bcrypt");
-const { Resident } = require("../models");
-const jwt = require("jsonwebtoken");
-const HandlerError = require("../errors/handlerError");
-const client = require("../config/redisClient");
-require("dotenv").config();
+  const bcrypt = require("bcrypt");
+  const { Resident } = require("../models");
+  const jwt = require("jsonwebtoken");
+  const HandlerError = require("../errors/handlerError");
+  const client = require("../config/redisClient");
+  require("dotenv").config();
 
-const checkAuthDataFields = (data, method) => {
-  if (method == "register") {
-    if (!data.username || !data.password || !data.email) {
-      throw new HandlerError("Todos os campos são obrigatórios", 400);
+  const checkAuthDataFields = (data, method) => {
+    if (method == "register") {
+      if (!data.username || !data.password || !data.email) {
+        throw new HandlerError("Todos os campos são obrigatórios", 400);
+      }
+    } else if (method == "login") {
+      if (!data.password || !data.email) {
+        throw new HandlerError("Todos os campos são obrigatórios", 400);
+      }
     }
-  } else if (method == "login") {
-    if (!data.password || !data.email) {
-      throw new HandlerError("Todos os campos são obrigatórios", 400);
-    }
-  }
-  return data;
-};
+    return data;
+  };
 
 const findUserByEmail = async (email) => {
   const user = await Resident.findOne({
@@ -48,7 +48,7 @@ const userRegister = async (data) => {
   return userDataRegister;
 };
 
-const sendSucessResponse = (res, data, message) => {
+const sendSuccessResponse = (res, data, message) => {
   return res.status(200).json({ message: message, data: data });
 };
 
@@ -141,7 +141,7 @@ module.exports = {
   findUserByEmail,
   verifyPassword,
   sendMessageError,
-  sendSucessResponse,
+  sendSuccessResponse,
   userRegister,
   checkAuthDataFields,
   addTokenToBlackList,

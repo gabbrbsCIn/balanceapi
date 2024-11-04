@@ -1,7 +1,7 @@
 const {
   userAuthenticate,
   sendMessageError,
-  sendSucessResponse,
+  sendSuccessResponse,
   generateJWTToken,
   userRegister,
   checkAuthDataFields,
@@ -19,7 +19,7 @@ const register = async (req, res) => {
     };
     checkAuthDataFields(data, "register");
     const user = await userRegister(data);
-    sendSucessResponse(res, user.email, "Usuário cadastrado!");
+    sendSuccessResponse(res, user.email, "Usuário cadastrado!");
   } catch (error) {
     sendMessageError(res, error);
   }
@@ -35,7 +35,7 @@ const login = async (req, res) => {
     checkAuthDataFields(data, "login");
     const user = await userAuthenticate(email, password);
     const token = await generateJWTToken(user);
-    sendSucessResponse(
+    sendSuccessResponse(
       res,
       { id: user.id, email: user.email, accessToken: token },
       "Usuário logado"
@@ -50,7 +50,7 @@ const logout = async (req, res) => {
   if (token) {
     await addTokenToBlackList(token);
   }
-  return sendSucessResponse(res, "logout", "Usuário Deslogado!");
+  return sendSuccessResponse(res, "logout", "Usuário Deslogado!");
 };
 
 module.exports = {
